@@ -49,18 +49,34 @@ const App = () => {
    
   const [selected, setSelected] = useState(0)
 
+  const mostVotedSelection = votes.indexOf(Math.max(...votes))
+
   return (
     <div>
       <div>
+        <h1>
+          Anecdote of the day
+        </h1>
         {anecdotes[selected]}
+      </div>
+      <div>
+        <DisplayVotes votes={votes} selected={selected}/>
       </div>
       <div>
         <Button text="vote" handler={votingHandler(votes, selected, upvote)}/>
         <Button text="next anecdote" handler={randomAnecdoteHandler(setSelected)}/>
       </div>
       <div>
-        <DisplayVotes votes={votes} selected={selected}/>
+        <h1>
+          Anecdote with the most votes
+        </h1>
       </div>
+      <div>
+        {anecdotes[mostVotedSelection]}
+      </div>
+      <div>
+          <DisplayVotes votes={votes} selected={mostVotedSelection}/>
+        </div>
     </div>
   )
 }
