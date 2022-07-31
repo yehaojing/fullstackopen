@@ -1,3 +1,9 @@
+const arraySum = (array) => {
+  return(
+    array.reduce((left, right) => left + right, 0)
+  )
+}
+
 const Course = ({courseObject}) => {
   return (
   <>
@@ -5,7 +11,12 @@ const Course = ({courseObject}) => {
       {courseObject.name}
     </h1>
     <div>
-      {courseObject.parts.map(part => <div>{part.name} {part.exercises}</div>)}
+      {courseObject.parts.map(part => <p>{part.name} {part.exercises}</p>)}
+    </div>
+    <div>
+      <b>
+        total of {arraySum(courseObject.parts.map(part => part.exercises))} exercises
+      </b>
     </div>
   </>
 
@@ -31,6 +42,11 @@ const App = () => {
           name: 'State of a component',
           exercises: 14,
           id: 3
+        },
+        {
+          name: 'Redux',
+          exercises: 11,
+          id: 4
         }
     ]
   }
