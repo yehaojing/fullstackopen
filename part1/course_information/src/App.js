@@ -4,14 +4,14 @@ const arraySum = (array) => {
   )
 }
 
-const Course = ({courseObject}) => {
+const Course = (courseObject) => {
   return (
   <>
     <h1>
       {courseObject.name}
     </h1>
     <div>
-      {courseObject.parts.map(part => <p>{part.name} {part.exercises}</p>)}
+      {courseObject.parts.map(part => <p key={part.name}>{part.name} {part.exercises}</p>)}
     </div>
     <div>
       <b>
@@ -19,14 +19,16 @@ const Course = ({courseObject}) => {
       </b>
     </div>
   </>
-
   )
 }
 
+const Courses = ({coursesArray}) => coursesArray.map(course => <div key={course.name}>{Course(course)}</div>)
+
 const App = () => {
-  const course = {
-      id: 1,
+  const courses = [
+    {
       name: 'Half Stack application development',
+      id: 1,
       parts: [
         {
           name: 'Fundamentals of React',
@@ -48,12 +50,29 @@ const App = () => {
           exercises: 11,
           id: 4
         }
-    ]
-  }
+      ]
+    }, 
+    {
+      name: 'Node.js',
+      id: 2,
+      parts: [
+        {
+          name: 'Routing',
+          exercises: 3,
+          id: 1
+        },
+        {
+          name: 'Middlewares',
+          exercises: 7,
+          id: 2
+        }
+      ]
+    }
+  ]
 
   return (
     <div>
-      <Course courseObject={course}/>
+      <Courses coursesArray={courses}/>
     </div>
   )
 }
