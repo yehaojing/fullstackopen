@@ -15,10 +15,10 @@ const Button = ({text, handler}) => {
   )
 }
 
-const DisplayFeedback = ({feedbackType, text}) => {
+const StatisticLine = ({text, value}) => {
   return (
     <p>
-      {feedbackType}: {text}
+      {text}: {value}
     </p>      
   )
 }
@@ -36,12 +36,12 @@ if (good === 0) {
     return(
       <div>
         <h1>Statistics</h1>
-        <DisplayFeedback feedbackType="Good" text={good}/>
-        <DisplayFeedback feedbackType="Neutral" text={neutral}/>
-        <DisplayFeedback feedbackType="Bad" text={bad}/>
-        <DisplayFeedback feedbackType="All" text={good + neutral + bad}/>
-        <DisplayFeedback feedbackType="Average" text={(good + 0*neutral + -1*bad)/3}/>
-        <DisplayFeedback feedbackType="Positive" text={(good/(good+neutral+bad)*100).toString() + "%"}/>
+        <StatisticLine text="Good" value={good}/>
+        <StatisticLine text="Neutral" value={neutral}/>
+        <StatisticLine text="Bad" value={bad}/>
+        <StatisticLine text="All" value={good + neutral + bad}/>
+        <StatisticLine text="Average" value={(good + 0*neutral + -1*bad)/3}/>
+        <StatisticLine text="Positive" value={(good/(good+neutral+bad)*100).toString() + "%"}/>
       </div>
     )
   }
