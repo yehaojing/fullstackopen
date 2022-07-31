@@ -23,13 +23,8 @@ const DisplayFeedback = ({feedbackType, text}) => {
   )
 }
 
-const App = () => {
-  // save clicks of each button to its own state
-  const [good, setGood] = useState(0)
-  const [neutral, setNeutral] = useState(0)
-  const [bad, setBad] = useState(0)
-
-  // use good, neutral and bad from App scope
+const Statistics = ({good, neutral, bad}) => {
+  // use good, neutral and bad from Statistics scope
   const positiveFeedbackCalculation = () => {
     if (good === 0) {
       return "0%"
@@ -39,24 +34,39 @@ const App = () => {
       return posFeedbackPerc.toString() + "%"
     }
   }
+  
+  return(
+    <div>
+      <h1>Statistics</h1>
+      <DisplayFeedback feedbackType="Good" text={good}/>
+      <DisplayFeedback feedbackType="Neutral" text={neutral}/>
+      <DisplayFeedback feedbackType="Bad" text={bad}/>
+      <DisplayFeedback feedbackType="All" text={good + neutral + bad}/>
+      <DisplayFeedback feedbackType="Average" text={(good + 0*neutral + -1*bad)/3}/>
+      <DisplayFeedback feedbackType="Positive" text={positiveFeedbackCalculation()}/>
+    </div>
+  )
+}
+
+const App = () => {
+  // save clicks of each button to its own state
+  const [good, setGood] = useState(0)
+  const [neutral, setNeutral] = useState(0)
+  const [bad, setBad] = useState(0)
+
+
 
 
   return (
     <>
       <div>
-        <h1>give feedback</h1>
-        <Button text="good" handler={feedbackHandlerFactory(good, setGood)}/>
-        <Button text="neutral" handler={feedbackHandlerFactory(neutral, setNeutral)}/>
-        <Button text="bad" handler={feedbackHandlerFactory(bad, setBad)}/>
+        <h1>Give feedback</h1>
+        <Button text="Good" handler={feedbackHandlerFactory(good, setGood)}/>
+        <Button text="Neutral" handler={feedbackHandlerFactory(neutral, setNeutral)}/>
+        <Button text="Bad" handler={feedbackHandlerFactory(bad, setBad)}/>
       </div>
       <div>
-        <h1>statistics</h1>
-        <DisplayFeedback feedbackType="good" text={good}/>
-        <DisplayFeedback feedbackType="neutral" text={neutral}/>
-        <DisplayFeedback feedbackType="bad" text={bad}/>
-        <DisplayFeedback feedbackType="all" text={good + neutral + bad}/>
-        <DisplayFeedback feedbackType="average" text={(good + 0*neutral + -1*bad)/3}/>
-        <DisplayFeedback feedbackType="positive" text={positiveFeedbackCalculation()}/>
+        <Statistics good={good} bad={bad} neutral={neutral}/>
       </div>
     </>
   )
