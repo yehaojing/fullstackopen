@@ -25,27 +25,26 @@ const DisplayFeedback = ({feedbackType, text}) => {
 
 const Statistics = ({good, neutral, bad}) => {
   // use good, neutral and bad from Statistics scope
-  const positiveFeedbackCalculation = () => {
-    if (good === 0) {
-      return "0%"
-    } 
-    else {
-      const posFeedbackPerc = good/(good+neutral+bad)*100
-      return posFeedbackPerc.toString() + "%"
-    }
-  }
-  
-  return(
+if (good === 0) {
+  return (
     <div>
-      <h1>Statistics</h1>
-      <DisplayFeedback feedbackType="Good" text={good}/>
-      <DisplayFeedback feedbackType="Neutral" text={neutral}/>
-      <DisplayFeedback feedbackType="Bad" text={bad}/>
-      <DisplayFeedback feedbackType="All" text={good + neutral + bad}/>
-      <DisplayFeedback feedbackType="Average" text={(good + 0*neutral + -1*bad)/3}/>
-      <DisplayFeedback feedbackType="Positive" text={positiveFeedbackCalculation()}/>
+      No feedback given.
     </div>
   )
+} 
+  else {
+    return(
+      <div>
+        <h1>Statistics</h1>
+        <DisplayFeedback feedbackType="Good" text={good}/>
+        <DisplayFeedback feedbackType="Neutral" text={neutral}/>
+        <DisplayFeedback feedbackType="Bad" text={bad}/>
+        <DisplayFeedback feedbackType="All" text={good + neutral + bad}/>
+        <DisplayFeedback feedbackType="Average" text={(good + 0*neutral + -1*bad)/3}/>
+        <DisplayFeedback feedbackType="Positive" text={(good/(good+neutral+bad)*100).toString() + "%"}/>
+      </div>
+    )
+  }
 }
 
 const App = () => {
@@ -53,9 +52,6 @@ const App = () => {
   const [good, setGood] = useState(0)
   const [neutral, setNeutral] = useState(0)
   const [bad, setBad] = useState(0)
-
-
-
 
   return (
     <>
