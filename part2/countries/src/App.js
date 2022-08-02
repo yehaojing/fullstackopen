@@ -1,39 +1,58 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 
-const HighlightCountry = ({country}) => {
-    const flag_str = `Flag of ${country.name.common}`
+const HighlightButton = ({text, eventHandler}) => {
     return (
-        <>
-            <h1>
-                {country.name.common}
-            </h1>
-            <div>
-                Capital - {country.capital}
-            </div>
-            <div>
-                Area - {country.area}
-            </div>
-            <h1>
-                Languages
-            </h1>
-            <ul>
-            {Object.values(country.languages).map(language => <li>{language}</li>)}
-            </ul>
-            <img src={country.flags.png} alt={flag_str}/>  
-        </>
+        <button onClick={eventHandler}>
+            {text}
+        </button>
     )
 }
 
-const Countries = ({countries, filter}) => {
+const highlightCountryHandler = (country, setHighlightCountry) => {
+    return () => setHighlightCountry(country)
+}
+
+const HighlightCountry = ({country}) => {
+    console.log("highlighted country is ", country)
+    if (country === "" ) {
+        return <div>Please show a country.</div>
+    } else {
+        const flag_str = `Flag of ${country.name.common}`
+        return (
+            <>
+                <h1>
+                    {country.name.common}
+                </h1>
+                <div>
+                    Capital - {country.capital}
+                </div>
+                <div>
+                    Area - {country.area}
+                </div>
+                <h1>
+                    Languages
+                </h1>
+                <ul>
+                {Object.values(country.languages).map(language => <li>{language}</li>)}
+                </ul>
+                <img src={country.flags.png} alt={flag_str}/>  
+            </>
+        )
+    }
+}
+
+const Countries = ({countries, filter, setHighlightCountry}) => {
     const filtered_countries = countries.filter(country => country.name.common.toLowerCase().indexOf(filter.toLowerCase()) >= 0)
     console.log(filtered_countries)
     if (filtered_countries.length > 10) {
-        return <div>Too many countries to list...</div>
-    } else if (filtered_countries.length === 1) {
-        return filtered_countries.map(country => <HighlightCountry country={country}/>)
+         return <div>Too many countries to list...</div>
     } else {
-        return filtered_countries.map(country => <div>{country.name.common}</div>)
+        return filtered_countries.map(country => 
+            <div key={country.name.common}>{country.name.common}
+                <HighlightButton text="show" eventHandler={highlightCountryHandler(country, setHighlightCountry)}/>
+            </div>
+        )
     }
 }
 
@@ -51,6 +70,7 @@ const Filter = ({filter, setFilter}) => {
 const App = () => {
     const [filter, setFilter] = useState("")
     const [countries, setCountries] = useState([])
+    const [highlightCountry, setHighlightCountry] = useState("")
 
     const hook = () => {
         console.log('effect')
@@ -63,11 +83,13 @@ const App = () => {
     }
       
     useEffect(hook, [])
+    console.log("app highlighted country is ", highlightCountry)
 
     return (
         <div>
         <Filter filter={filter} setFilter={setFilter}/>
-        <Countries countries={countries} filter={filter}/>
+        <Countries countries={countries} filter={filter} setHighlightCountry={setHighlightCountry}/>
+        <HighlightCountry country={highlightCountry}/>
         </div>
     )
 }
