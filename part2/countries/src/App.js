@@ -13,9 +13,24 @@ const highlightCountryHandler = (country, setHighlightCountry) => {
     return () => setHighlightCountry(country)
 }
 
-const HighlightCountry = ({country}) => {
-    console.log("highlighted country is ", country)
-    if (country === "" ) {
+const HighlightCityWeather = ({weather}) => {
+    const icon_url = `http://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`
+    return (
+        <>
+            <h2>Weather in {weather.name}</h2>
+            <div>
+                Temperature: {weather.main.temp} Celcius
+            </div>
+            <img src={icon_url} alt="Weather"/>
+            <div>
+                Wind: {weather.wind.speed} m/s
+            </div>
+        </>
+    )
+}
+
+const HighlightCountry = ({country, weather}) => {
+    if (country === "" | weather=== "" ) {
         return <div>Please show a country.</div>
     } else {
         const flag_str = `Flag of ${country.name.common}`
@@ -34,9 +49,10 @@ const HighlightCountry = ({country}) => {
                     Languages
                 </h1>
                 <ul>
-                {Object.values(country.languages).map(language => <li>{language}</li>)}
+                {Object.values(country.languages).map(language => <li key={language}>{language}</li>)}
                 </ul>
-                <img src={country.flags.png} alt={flag_str}/>  
+                <img src={country.flags.png} alt={flag_str}/>
+                <HighlightCityWeather weather={weather}/>
             </>
         )
     }
@@ -44,7 +60,6 @@ const HighlightCountry = ({country}) => {
 
 const Countries = ({countries, filter, setHighlightCountry}) => {
     const filtered_countries = countries.filter(country => country.name.common.toLowerCase().indexOf(filter.toLowerCase()) >= 0)
-    console.log(filtered_countries)
     if (filtered_countries.length > 10) {
          return <div>Too many countries to list...</div>
     } else {
@@ -57,7 +72,6 @@ const Countries = ({countries, filter, setHighlightCountry}) => {
 }
 
 const Filter = ({filter, setFilter}) => {
-
     return (
     <form>
         <div>
@@ -71,25 +85,39 @@ const App = () => {
     const [filter, setFilter] = useState("")
     const [countries, setCountries] = useState([])
     const [highlightCountry, setHighlightCountry] = useState("")
+    const [highlightCityWeather, setHiglightCityWeather] = useState("")
 
-    const hook = () => {
-        console.log('effect')
+    const countriesHook = () => {
         axios
             .get('https://restcountries.com/v3.1/all')
             .then(response => {
-                console.log('promise fulfilled')
+                console.log('Countries promise fulfilled')
                 setCountries(response.data)
         })
     }
       
-    useEffect(hook, [])
-    console.log("app highlighted country is ", highlightCountry)
+    useEffect(countriesHook, [])
 
+    const weatherHook = () => {
+        if (highlightCountry === "") {
+            setHiglightCityWeather("")
+        } else {
+            const request_url = `https://api.openweathermap.org/data/2.5/weather?q=${highlightCountry.capital}&appid=${process.env.REACT_APP_NOT_SECRET_CODE}&units=metric`
+            axios
+                .get(request_url)
+                .then(response => {
+                    console.log('Weather promise fulfilled')
+                    setHiglightCityWeather(response.data)
+                })
+        }
+    }
+      
+    useEffect(weatherHook, [highlightCountry])
     return (
         <div>
-        <Filter filter={filter} setFilter={setFilter}/>
-        <Countries countries={countries} filter={filter} setHighlightCountry={setHighlightCountry}/>
-        <HighlightCountry country={highlightCountry}/>
+            <Filter filter={filter} setFilter={setFilter}/>
+            <Countries countries={countries} filter={filter} setHighlightCountry={setHighlightCountry}/>
+            <HighlightCountry country={highlightCountry} weather={highlightCityWeather}/>
         </div>
     )
 }
