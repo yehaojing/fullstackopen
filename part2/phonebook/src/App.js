@@ -56,7 +56,17 @@ const App = () => {
     const addPerson = (event) => {
         event.preventDefault()
         if (persons.map(person => person.name).indexOf(newName) === -1) {
-            setPersons(persons.concat({name: newName, number:newNumber}))
+            const newPerson = {
+                    name: newName,
+                    number: newNumber
+                }
+            
+            axios
+                .post('http://localhost:3001/persons', newPerson)
+                .then(response => {
+                    console.log(response)
+                    setPersons(persons.concat(response.data))
+                })
             setNewName("")
             setNewNumber("")
         } else {
