@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
+import personsService from './services/persons'
 
 const Persons = ({persons, filter}) => {
     const personsToShow = persons.filter(person => person.name.toLowerCase().indexOf(filter.toLowerCase()) >= 0)
@@ -36,22 +36,16 @@ const Filter = ({filter, handleFilterChange}) => {
 const App = () => {
 
     const [persons, setPersons] = useState([])
-
-    const hook = () => {
-        console.log('effect')
-        axios
-            .get('http://localhost:3001/persons')
-            .then(response => {
-                console.log('promise fulfilled')
-                setPersons(response.data)
-        })
-    }
-      
-    useEffect(hook, [])
-
     const [newName, setNewName] = useState('')
     const [newNumber, setNewNumber] = useState('')
     const [filter, setFilter] = useState("")
+
+    const hook = () => {
+        personsService
+            .getPersons()
+            .then(response => {setPersons(response.data)})
+    }
+    useEffect(hook, [])
 
     const addPerson = (event) => {
         event.preventDefault()
@@ -61,8 +55,7 @@ const App = () => {
                     number: newNumber
                 }
             
-            axios
-                .post('http://localhost:3001/persons', newPerson)
+            personsService.postNewPerson(newPerson)
                 .then(response => {
                     console.log(response)
                     setPersons(persons.concat(response.data))
@@ -85,8 +78,6 @@ const App = () => {
     const handleFilterChange = (event) => {
         setFilter(event.target.value)
     }
- 
-    console.log(persons)
 
     return (
         <div>
