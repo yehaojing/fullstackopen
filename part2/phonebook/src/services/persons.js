@@ -21,10 +21,18 @@ const deletePerson = (id) => {
     )
 }
 
+const updatePerson = (id, newPerson) => {
+    const url = `${baseUrl}/${id}`
+    return (
+        axios.put(url, newPerson)
+    )
+}
+
 export default {
-    getPersons: getPersons,
-    postNewPerson: postNewPerson,
-    deletePerson: deletePerson
+    getPersons,
+    postNewPerson,
+    deletePerson,
+    updatePerson
 }
 
 

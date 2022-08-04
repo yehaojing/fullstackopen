@@ -63,12 +63,11 @@ const App = () => {
 
     const addPerson = (event) => {
         event.preventDefault()
-        if (persons.map(person => person.name).indexOf(newName) === -1) {
-            const newPerson = {
-                    name: newName,
-                    number: newNumber
-                }
-            
+        const newPerson = {
+            name: newName,
+            number: newNumber
+        }
+        if (persons.map(person => person.name.toLowerCase()).indexOf(newPerson.name.toLowerCase()) === -1) {
             personsService.postNewPerson(newPerson)
                 .then(response => {
                     console.log(response)
@@ -77,7 +76,14 @@ const App = () => {
             setNewName("")
             setNewNumber("")
         } else {
-            window.alert(`${newName} is already added to phonebook!`)
+            if (window.confirm(`${newName} is already added to phonebook, would you like to update their number?`)) {
+                console.log(persons.filter(person => person.name === newName)[0].id)
+                personsService
+                .updatePerson(persons.filter(person => person.name === newName)[0].id, newPerson)
+                .then(response => {
+                    setPersons(persons.filter(person => person.name != newName).concat(response.data))
+                })
+            }
         }
     }
 
