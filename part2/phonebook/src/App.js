@@ -1,10 +1,24 @@
 import { useState, useEffect } from 'react'
 import personsService from './services/persons'
 
-const Persons = ({persons, filter}) => {
-    const personsToShow = persons.filter(person => person.name.toLowerCase().indexOf(filter.toLowerCase()) >= 0)
-    const component = personsToShow.map(person => <div key={person.name}>{person.name} {person.number}</div>)
-    return component
+const Button = ({text, handler}) => {
+    return (
+        <button onClick={handler}>
+            {text}
+        </button>
+    )
+}
+
+const Persons = ({persons, filter, handleDeletePerson}) => {
+    return ( 
+        persons
+            .filter(person => person.name.toLowerCase().indexOf(filter.toLowerCase()) >= 0)
+            .map(person => 
+                <div key={person.name}>
+                    {person.name} {person.number} <Button text="delete" handler={handleDeletePerson(person.name, person.id)}/>
+                </div>
+        )
+    )
 }
 
 const PersonForm = ({addPerson, handlePersonFormChange, handleNumberFormChange, newName, newNumber}) => {
@@ -67,6 +81,22 @@ const App = () => {
         }
     }
 
+    const handleDeletePerson = (name, id) => {
+        return (
+            () => {
+                if (window.confirm(`Are you sure you want to delete ${name}?`)) {
+                    personsService
+                        .deletePerson(id)
+                        .then(() => {
+                            personsService
+                                .getPersons()
+                                .then(response => setPersons(response.data))
+                        })
+                }
+            }
+        )
+    }
+
     const handlePersonFormChange = (event) => {
         setNewName(event.target.value)
     }
@@ -92,7 +122,7 @@ const App = () => {
             newNumber={newNumber}
         />
         <h3>Numbers</h3>
-        <Persons persons={persons} filter={filter}/>
+        <Persons persons={persons} filter={filter} handleDeletePerson={handleDeletePerson}/>
         </div>
     )
 }
