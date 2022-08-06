@@ -38,7 +38,6 @@ app.get('/info', (request, response) => {
 
 app.get('/api/persons/:id', (request, response) => {
     const id = Number(request.params.id)
-    console.log(id)
     const person = persons.find(person => {
         return person.id === id
     })
@@ -47,6 +46,13 @@ app.get('/api/persons/:id', (request, response) => {
     } else {
         response.status(404).end()
     }
+})
+
+app.delete('/api/persons/:id', (request, response) => {
+    const id = Number(request.params.id)
+    persons = persons.filter(person => person.id != id)
+
+    response.status(204).end()
 })
 
 const PORT = 3001
