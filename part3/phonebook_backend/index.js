@@ -55,6 +55,27 @@ app.delete('/api/persons/:id', (request, response) => {
     response.status(204).end()
 })
 
+app.post('/api/persons', (request, response) => {
+    const body = request.body
+
+    if (!body.name || !body.number) {
+        response.status(400).end()
+    }
+    else {
+        const new_person = {
+            id: Math.round(Math.random()*Math.pow(10, 9)),
+            name: body.name,
+            number: body.number
+        }
+        console.log('before request', persons)
+
+        persons = persons.concat(new_person)
+        
+        console.log('after request', persons)
+        response.json(new_person)
+    }
+}) 
+
 const PORT = 3001
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
