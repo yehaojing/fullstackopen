@@ -59,7 +59,18 @@ app.post('/api/persons', (request, response) => {
     const body = request.body
 
     if (!body.name || !body.number) {
-        response.status(400).end()
+        const missing = [
+            !body.name ? 'name' : '', 
+            !body.number ? 'number' : ''
+        ].filter(Boolean).join(", ")
+        response.status(400).json({
+            "error": `${missing} is missing`
+        })
+    }
+    else if (persons.map(person => person.name).indexOf(body.name) != -1) {
+        response.status(409).json({
+            error: 'name must be unique'
+        })
     }
     else {
         const new_person = {
@@ -67,11 +78,7 @@ app.post('/api/persons', (request, response) => {
             name: body.name,
             number: body.number
         }
-        console.log('before request', persons)
-
         persons = persons.concat(new_person)
-        
-        console.log('after request', persons)
         response.json(new_person)
     }
 }) 
