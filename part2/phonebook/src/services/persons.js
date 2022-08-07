@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const baseUrl = 'http://localhost:3001/persons'
+const baseUrl = 'http://localhost:3001/api/persons'
 
 const postNewPerson = (newPerson) => {
     return (
@@ -28,11 +28,13 @@ const updatePerson = (id, newPerson) => {
     )
 }
 
-export default {
+const exportedObject = {
     getPersons,
     postNewPerson,
     deletePerson,
     updatePerson
 }
+
+export default exportedObject
 
 
