@@ -101,7 +101,7 @@ const App = () => {
                 personsService
                 .updatePerson(persons.filter(person => person.name === newName)[0].id, newPerson)
                 .then(response => {
-                    setPersons(persons.filter(person => person.name != newName).concat(response.data))
+                    setPersons(persons.filter(person => person.name !== newName).concat(response.data))
                 })
                 setNewName("")
                 setNewNumber("")
