@@ -67,7 +67,7 @@ const App = () => {
     const [newNumber, setNewNumber] = useState('')
     const [filter, setFilter] = useState("")
     const [newPersonMessage, setNewPersonMessage] = useState(null)
-    const [deletePersonError, setDeletePersonError] = useState(null)
+    const [errorMessage, setErrorMessage] = useState(null)
       
 
     const hook = () => {
@@ -88,13 +88,19 @@ const App = () => {
                 .then(response => {
                     console.log(response)
                     setPersons(persons.concat(response.data))
+                    setNewName("")
+                    setNewNumber("")
+                    setNewPersonMessage(`Added ${newPerson.name}`)
+                    setTimeout(() => {
+                        setNewPersonMessage(null)
+                    }, 5000)
                 })
-            setNewName("")
-            setNewNumber("")
-            setNewPersonMessage(`Added ${newPerson.name}`)
-            setTimeout(() => {
-                setNewPersonMessage(null)
-            }, 5000);
+                .catch(error => {
+                    setErrorMessage(error.response.data.error)
+                    setTimeout(() => {
+                        setErrorMessage(null)
+                    }, 5000)
+                })
         } else {
             if (window.confirm(`${newName} is already added to phonebook, would you like to update their number?`)) {
                 console.log(persons.filter(person => person.name === newName)[0].id)
@@ -102,10 +108,19 @@ const App = () => {
                 .updatePerson(persons.filter(person => person.name === newName)[0].id, newPerson)
                 .then(response => {
                     setPersons(persons.filter(person => person.name !== newName).concat(response.data))
+                    setNewName("")
+                    setNewNumber("")
+                    setNewPersonMessage(`Updated ${newPerson.name}`)
+                    setTimeout(() => {
+                        setNewPersonMessage(null)
+                    }, 5000)
                 })
-                setNewName("")
-                setNewNumber("")
-                setNewPersonMessage(`Updated ${newPerson.name}`)
+                .catch(error => {
+                    setErrorMessage(error.response.data.error)
+                    setTimeout(() => {
+                        setErrorMessage(null)
+                    }, 5000)
+                })
             }
         }
     }
@@ -117,18 +132,18 @@ const App = () => {
                     personsService
                         .deletePerson(id)
                         .then(() => {
-                            setDeletePersonError(`${name} has been removed.`)
+                            setErrorMessage(`${name} has been removed.`)
                             setTimeout(() => {
-                                    setDeletePersonError(null)
+                                    setErrorMessage(null)
                             }, 5000)
                             personsService
                                 .getPersons()
                                 .then(response => setPersons(response.data))
                         })
                         .catch(() => {
-                            setDeletePersonError(`${name} has already been removed.`)
+                            setErrorMessage(`${name} has already been removed.`)
                             setTimeout(() => {
-                                setDeletePersonError(null)
+                                setErrorMessage(null)
                             }, 5000)
                             personsService
                                 .getPersons()
@@ -154,7 +169,7 @@ const App = () => {
     return (
         <div>
             <Notification message={newPersonMessage} className="new"/>
-            <Notification message={deletePersonError} className="error"/>
+            <Notification message={errorMessage} className="error"/>
         <h2>Phonebook</h2>
         <Filter filter={filter} handleFilterChange={handleFilterChange}/>
         <h3>Add a Number</h3>
