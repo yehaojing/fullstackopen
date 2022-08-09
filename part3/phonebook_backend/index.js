@@ -79,13 +79,14 @@ app.post('/api/persons', (request, response) => {
         })
     }
     else {
-        const new_person = {
-            id: Math.round(Math.random()*Math.pow(10, 9)),
+        const new_person = new Person({
+            // id: Math.round(Math.random()*Math.pow(10, 9)),
             name: body.name,
             number: body.number
-        }
-        persons = persons.concat(new_person)
-        response.json(new_person)
+        })
+        new_person.save().then(
+            savedNewPerson => response.json(savedNewPerson)
+        )
     }
 }) 
 
