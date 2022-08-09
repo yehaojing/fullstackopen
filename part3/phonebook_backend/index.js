@@ -10,29 +10,6 @@ app.use(express.json())
 app.use(express.static('build'))
 app.use(morgan)
 
-let persons = [
-    { 
-      "id": 1,
-      "name": "Arto Hellas", 
-      "number": "040-123456"
-    },
-    { 
-      "id": 2,
-      "name": "Ada Lovelace", 
-      "number": "39-44-5323523"
-    },
-    { 
-      "id": 3,
-      "name": "Dan Abramov", 
-      "number": "12-43-234345"
-    },
-    { 
-      "id": 4,
-      "name": "Mary Poppendieck", 
-      "number": "39-23-6423122"
-    }
-]
-  
 app.get('/api/persons', (request, response) => {
     Person
         .find({})
@@ -61,7 +38,7 @@ app.delete('/api/persons/:id', (request, response, next) => {
         .catch(error => next(error))
 })
 
-app.post('/api/persons', (request, response) => {
+app.post('/api/persons', (request, response, next) => {q
     const body = request.body
 
     if (!body.name || !body.number) {
@@ -71,11 +48,6 @@ app.post('/api/persons', (request, response) => {
         ].filter(Boolean).join(", ")
         response.status(400).json({
             "error": `${missing} is missing`
-        })
-    }
-    else if (persons.map(person => person.name).indexOf(body.name) != -1) {
-        response.status(409).json({
-            error: 'name must be unique'
         })
     }
     else {
@@ -88,6 +60,21 @@ app.post('/api/persons', (request, response) => {
             .then(savedNewPerson => response.json(savedNewPerson))
             .catch(error => next(error))
     }
+})
+
+app.put('/api/persons/:id', (request, response, next) => {
+    const body = request.body
+
+    const updatePerson = {
+        number: body.number
+    }
+
+    Person
+        .findByIdAndUpdate(request.params.id, updatePerson, {new: true})
+        .then(updatedPerson => {
+            response.json(updatedPerson)
+        })
+        .catch(error => next(error))
 })
 
 const errorHandler = (error, request, response, next) => {
