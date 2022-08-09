@@ -54,11 +54,12 @@ app.get('/api/persons/:id', (request, response) => {
         .then(person => response.json(person))
 })
 
-app.delete('/api/persons/:id', (request, response) => {
-    const id = Number(request.params.id)
-    persons = persons.filter(person => person.id != id)
-
-    response.status(204).end()
+app.delete('/api/persons/:id', (request, response, next) => {
+    Person
+        .findByIdAndRemove(request.params.id)
+        .then(result => {
+            response.status(204).end()
+        })
 })
 
 app.post('/api/persons', (request, response) => {
@@ -89,7 +90,6 @@ app.post('/api/persons', (request, response) => {
         )
     }
 }) 
-
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
