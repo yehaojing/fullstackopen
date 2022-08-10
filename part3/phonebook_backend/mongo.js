@@ -10,8 +10,8 @@ const password = process.argv[2]
 const url = `mongodb+srv://yehaojing:${password}@cluster0.qmyvplz.mongodb.net/phonebook?retryWrites=true&w=majority`
 
 const personSchema = new mongoose.Schema({
-  name: String,
-  number: String,
+    name: String,
+    number: String,
 })
 
 const Person = mongoose.model('Person', personSchema)
@@ -21,7 +21,7 @@ if (process.argv.length === 5) {
     const number = process.argv[4]
     mongoose
         .connect(url, {family:4})
-        .then((result) => {
+        .then(() => {
             const person = new Person({
                 name: name,
                 number: number

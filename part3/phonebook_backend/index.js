@@ -10,7 +10,7 @@ app.use(express.json())
 app.use(express.static('build'))
 app.use(morgan)
 
-app.get('/api/persons', (request, response) => {
+app.get('/api/persons', (request, response, next) => {
     Person
         .find({})
         .then(result => response.json(result))
@@ -39,7 +39,7 @@ app.get('/api/persons/:id', (request, response, next) => {
 app.delete('/api/persons/:id', (request, response, next) => {
     Person
         .findByIdAndRemove(request.params.id)
-        .then(result => response.status(204).end())
+        .then(() => response.status(204).end())
         .catch(error => next(error))
 })
 
@@ -50,9 +50,9 @@ app.post('/api/persons', (request, response, next) => {
         const missing = [
             !body.name ? 'name' : '', 
             !body.number ? 'number' : ''
-        ].filter(Boolean).join(", ")
+        ].filter(Boolean).join(', ')
         response.status(400).json({
-            "error": `${missing} is missing`
+            'error': `${missing} is missing`
         })
     }
     else {
@@ -92,7 +92,7 @@ const errorHandler = (error, request, response, next) => {
     }
   
     next(error)
-  }
+}
   
 app.use(errorHandler)
 
