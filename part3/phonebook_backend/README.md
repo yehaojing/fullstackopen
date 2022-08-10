@@ -4,17 +4,17 @@ npm run build:init
 npm run build:ui
 ```
 
-The link to the phonebook backend hosted on Heroku:
+The link to the phonebook hosted on Heroku:
 ```
-https://hidden-dusk-19473.herokuapp.com/
+https://serene-caverns-01131.herokuapp.com/
 ```
 
 Generic info:
 ```
-https://hidden-dusk-19473.herokuapp.com/info
+https://serene-caverns-01131.herokuapp.com/info
 ```
 
 List persons:
 ```
-https://hidden-dusk-19473.herokuapp.com/api/persons
+https://serene-caverns-01131.herokuapp.com/api/persons
 ```
