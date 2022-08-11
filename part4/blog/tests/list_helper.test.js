@@ -62,6 +62,8 @@ const blogs = [
     }  
 ]
 
+const noBlogs = []
+
 const sameTopLikesBlogs = [
     {
         _id: '5a422a851b54a676234d17f7',
@@ -146,5 +148,17 @@ describe('favourite blog', () => {
     test('of array of blogs, with two blog objects with the top likes, is determined correctly', () => {
         const result = listHelper.favouriteBlog(sameTopLikesBlogs)
         expect(result).toEqual(sameTopLikesBlogs[1])
+    })
+})
+
+describe('most blogs', () => {
+    test('of array of blogs is determined correctly', () => {
+        const result = listHelper.mostBlogs(blogs)
+        expect(result).toEqual({ author: 'Robert C. Martin', blogs: 3 })
+    })
+
+    test('of empty array', () => {
+        const result = listHelper.mostBlogs(noBlogs)
+        expect(result).toEqual(undefined)
     })
 })
