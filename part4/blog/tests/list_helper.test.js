@@ -123,42 +123,54 @@ test('dummy returns one', () => {
 })
 
 describe('total likes', () => {
-    test('when list has only one blog, equals the likes of that', () => {
+    test('array 1 (single blog)', () => {
         const result = listHelper.totalLikes(listWithOneBlog)
         expect(result).toBe(5)
     })
 
-    test('of array of blogs is calculated correctly', () => {
+    test('array 2', () => {
         const result = listHelper.totalLikes(blogs)
         expect(result).toBe(36)
     })
 })
 
 describe('favourite blog', () => {
-    test('when list has only one blog, returns that blog', () => {
+    test('array 1 (single blog)', () => {
         const result = listHelper.favouriteBlog(listWithOneBlog)
         expect(result).toEqual(listWithOneBlog[0])
     })
 
-    test('of array of blogs is determined correctly', () => {
+    test('array 2', () => {
         const result = listHelper.favouriteBlog(blogs)
         expect(result).toEqual(blogs[2])
     })
 
-    test('of array of blogs, with two blog objects with the top likes, is determined correctly', () => {
+    test('array 3 (two blog objects with max likes)', () => {
         const result = listHelper.favouriteBlog(sameTopLikesBlogs)
         expect(result).toEqual(sameTopLikesBlogs[1])
     })
 })
 
 describe('most blogs', () => {
-    test('of array of blogs is determined correctly', () => {
+    test('array 2', () => {
         const result = listHelper.mostBlogs(blogs)
         expect(result).toEqual({ author: 'Robert C. Martin', blogs: 3 })
     })
 
-    test('of empty array', () => {
+    test('empty array', () => {
         const result = listHelper.mostBlogs(noBlogs)
+        expect(result).toEqual(undefined)
+    })
+})
+
+describe('most likes', () => {
+    test('array 2', () => {
+        const result = listHelper.mostLikes(blogs)
+        expect(result).toEqual({ author: 'Edsger W. Dijkstra', likes: 17 })
+    })
+
+    test('empty array', () => {
+        const result = listHelper.mostLikes(noBlogs)
         expect(result).toEqual(undefined)
     })
 })
