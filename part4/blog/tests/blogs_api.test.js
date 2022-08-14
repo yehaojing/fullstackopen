@@ -68,6 +68,18 @@ test('blog post with no likes defaults to 0 likes in database', async () => {
     expect(blogsAtEnd).toContainEqual(newBlog)
 })
 
+test('blog post with no title and url results in 400 Bad Request', async () => {
+    const newBlog = {
+        author: 'Test author',
+        likes: 666
+    }
+
+    await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(400)
+})
+
 afterAll(() => {
     mongoose.connection.close()
 })
