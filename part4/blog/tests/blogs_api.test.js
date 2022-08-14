@@ -25,6 +25,7 @@ test('id is defined', async () => {
 })
 
 test('blog post is successful', async () => {
+    const blogsAtStart = await helper.blogsInDb()
     const newBlog = {
         title: 'Test blog',
         author: 'Test author',
@@ -41,7 +42,29 @@ test('blog post is successful', async () => {
     newBlog.id = response._body.id
 
     const blogsAtEnd = await helper.blogsInDb()
-    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1)
+    expect(blogsAtEnd).toHaveLength(blogsAtStart.length + 1)
+    expect(blogsAtEnd).toContainEqual(newBlog)
+})
+
+test('blog post with no likes defaults to 0 likes in database', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const newBlog = {
+        title: 'Test blog with no likes',
+        author: 'Test author',
+        url: 'testblog.com',
+    }
+
+    const response = await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
+
+    newBlog.id = response._body.id
+    newBlog.likes = 0
+
+    const blogsAtEnd = await helper.blogsInDb()
+    expect(blogsAtEnd).toHaveLength(blogsAtStart.length + 1)
     expect(blogsAtEnd).toContainEqual(newBlog)
 })
 
