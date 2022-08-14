@@ -24,6 +24,27 @@ test('id is defined', async () => {
     expect(response.body[0].id).toBeDefined()
 })
 
+test('blog post is successful', async () => {
+    const newBlog = {
+        title: 'Test blog',
+        author: 'Test author',
+        url: 'testblog.com',
+        likes: 999
+    }
+
+    const response = await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
+
+    newBlog.id = response._body.id
+
+    const blogsAtEnd = await helper.blogsInDb()
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1)
+    expect(blogsAtEnd).toContainEqual(newBlog)
+})
+
 afterAll(() => {
     mongoose.connection.close()
 })
