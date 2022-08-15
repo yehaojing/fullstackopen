@@ -1,4 +1,5 @@
 const blogRouter = require('express').Router()
+const { update } = require('lodash')
 const Blog = require('../models/blog')
 
 blogRouter.get('/', async (request, response) => {
@@ -30,7 +31,23 @@ blogRouter.delete('/:id', async (request, response) => {
     } else {
         response.status(404).end()
     }
+})
 
+blogRouter.put('/:id', async (request, response) => {
+    console.log(request.body)
+    const body = {
+        title: request.body.title,
+        author: request.body.author,
+        likes: request.body.likes,
+        url: request.body.url,
+    }
+
+    const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, body, { new: true })
+    if (updatedBlog) {
+        response.status(201).json(updatedBlog)
+    } else {
+        response.status(404).end()
+    }
 })
 
 module.exports = blogRouter

@@ -111,6 +111,42 @@ describe('delete blog tests', () => {
     })
 })
 
+describe('update blog tests', () => {
+    test('update existing blog likes', async () => {
+        const blogsAtStart = await helper.blogsInDb()
+        const updateBlog = {
+            likes: 123
+        }
+        const id = blogsAtStart[0].id
+        await api
+            .put(`/api/blogs/${id}`)
+            .send(updateBlog) 
+            .expect(201)
+        
+        const blogCheck = blogsAtStart[0]
+        blogCheck['likes'] = updateBlog['likes']
+
+        const blogsAtEnd = await helper.blogsInDb()
+        expect(blogsAtEnd).toHaveLength(blogsAtStart.length)
+        expect(blogsAtEnd).toContainEqual(blogCheck)
+    })
+
+    test('update nonexistent blog unsuccessful', async () => {
+        const blogsAtStart = await helper.blogsInDb()
+        const updateBlog = {
+            likes: 123
+        }
+        const id = '62f3b3915e38708e4699c76f'
+        await api
+            .put(`/api/blogs/${id}`)
+            .send(updateBlog) 
+            .expect(404)
+
+        const blogsAtEnd = await helper.blogsInDb()
+        expect(blogsAtEnd).toEqual(blogsAtStart)
+    })
+})
+
 afterAll(() => {
     mongoose.connection.close()
 })
