@@ -4,6 +4,10 @@ const User = require('../models/user')
 
 userRouter.post('/', async (request, response) => {
     const { username, name, password } = request.body
+
+    if (password.length < 3) {
+        throw { name: 'ValidationError', message: 'User validation failed: password is shorter than the minimum allowed length (3).'}
+    }
   
     const saltRounds = 10
     const passwordHash = await bcrypt.hash(password, saltRounds)
@@ -23,6 +27,5 @@ userRouter.get('/', async (request, response) => {
     const users = await User.find({})
     response.json(users)
 })
-
 
 module.exports = userRouter
