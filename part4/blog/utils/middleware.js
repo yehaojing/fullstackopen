@@ -7,7 +7,18 @@ const errorHandler = (error, request, response, next) => {
         return response.status(400).json({ error: `username '${error.keyValue.username}' already exists ` })
     }
 }
-  
+
+const getTokenFrom = (request, response, next) => {
+    const authorization = request.get('authorization')
+    
+    if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
+        request.token = authorization.substring(7)
+    }
+
+    next()
+}
+
 module.exports = {
+    getTokenFrom,
     errorHandler
 }
