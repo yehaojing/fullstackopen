@@ -71,4 +71,20 @@ describe('when there is initially one user in db', () => {
         const usersAtEnd = await helper.usersInDb()
         expect(usersAtEnd).toHaveLength(usersAtStart.length)
     })
+    test('creation fails non-unique account', async () => {
+        const usersAtStart = await helper.usersInDb()
+
+        const newUser = {
+            username: 'root',
+            password: '1234',
+        }
+
+        await api
+            .post('/api/users')
+            .send(newUser)
+            .expect(400)
+
+        const usersAtEnd = await helper.usersInDb()
+        expect(usersAtEnd).toHaveLength(usersAtStart.length)
+    })
 })
