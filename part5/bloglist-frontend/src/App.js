@@ -3,6 +3,25 @@ import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
+const BlogForm = ({addBlog, handleTitleChange, handleAuthorChange, handleUrlChange, newTitle, newAuthor, newUrl}) => {
+  return (
+      <form onSubmit={addBlog}>
+          <div>
+          title: <input value={newTitle} onChange={handleTitleChange}/>
+          </div>
+          <div>
+          author: <input value={newAuthor} onChange={handleAuthorChange}/>
+          </div>
+          <div>
+          url: <input value={newUrl} onChange={handleUrlChange}/>
+          </div>
+          <div>
+              <button type="submit">create</button>
+          </div>
+      </form>
+    )
+}
+
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
@@ -59,9 +78,34 @@ const App = () => {
       )
   }
 
+  const [newTitle, setNewTitle] = useState('')
+  const [newAuthor, setNewAuthor] = useState('')
+  const [newUrl, setNewUrl] = useState('') 
+
+  const handleTitleChange = (event) => {
+    setNewTitle(event.target.value)
+  }
+
+  const handleAuthorChange = (event) => {
+    setNewAuthor(event.target.value)
+  }
+
+  const handleUrlChange = (event) => {
+    setNewUrl(event.target.value)
+  }
+
   const logoutHandler = (event) => {
     setUser(null)
     window.localStorage.removeItem('loggedBlogAppUser')
+  }
+
+  const addBlog = (event) => {
+    event.preventDefault()
+    blogService.postNewBlog(newTitle, newAuthor, newUrl)
+    setNewTitle('')
+    setNewAuthor('')
+    setNewUrl('')
+    setBlogs(blogs.concat({title: newTitle, author: newAuthor, url: newUrl}))
   }
 
   if (user === null) {
@@ -86,6 +130,15 @@ const App = () => {
       <div>
         logged in as {user.name} <Button text="logout" handler={logoutHandler}/>
       </div>
+      <BlogForm
+        addBlog={addBlog}
+        handleTitleChange={handleTitleChange}
+        handleAuthorChange={handleAuthorChange}
+        handleUrlChange={handleUrlChange}
+        newTitle={newTitle}
+        newAuthor={newAuthor}
+        newUrl={newUrl}
+      />
       <h2>blogs</h2>
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />

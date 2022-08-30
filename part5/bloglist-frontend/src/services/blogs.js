@@ -16,4 +16,19 @@ const getAll = () => {
   return request.then(response => response.data)
 }
 
-export default { setToken, getAll }
+const postNewBlog = (newTitle, newAuthor, newUrl) => {
+  const newBlog = {
+    title: newTitle, 
+    author: newAuthor,
+    url: newUrl
+  }
+  const config = {
+    headers: { Authorization: token },
+  }
+  
+  const request = axios.post(baseUrl, newBlog, config)
+  return request.then(response => response.data)
+}
+
+
+export default { setToken, getAll, postNewBlog}
