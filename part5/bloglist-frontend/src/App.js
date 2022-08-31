@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
+import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import './index.css'
@@ -19,7 +20,7 @@ const BlogForm = ({ addBlog, handleTitleChange, handleAuthorChange, handleUrlCha
           URL <input value={newUrl} onChange={handleUrlChange} />
         </div>
         <div>
-          <button type="submit">create</button>
+          <button type="submit">Create</button>
         </div>
       </form>
     </div>
@@ -135,7 +136,8 @@ const App = () => {
   }
 
   const addBlog = (event) => {
-    event.preventDefault()
+    event.preventDefault() // needed to prevent page from rerendering after event
+    blogFormRef.current.toggleVisibility()
     blogService.postNewBlog(newTitle, newAuthor, newUrl)
     setNewTitle('')
     setNewAuthor('')
@@ -146,6 +148,8 @@ const App = () => {
       setNewBlogMessage(null)
     }, 5000)
   }
+
+  const blogFormRef = useRef()
 
   return (
     <div>
@@ -158,22 +162,25 @@ const App = () => {
             <div>
               Logged in as {user.name} <Button text="logout" handler={logoutHandler} />
             </div>
-            <BlogForm
-              addBlog={addBlog}
-              handleTitleChange={handleTitleChange}
-              handleAuthorChange={handleAuthorChange}
-              handleUrlChange={handleUrlChange}
-              newTitle={newTitle}
-              newAuthor={newAuthor}
-              newUrl={newUrl}
-            />
+            <div>
+              <Togglable buttonLabel="new blog" ref={blogFormRef}>
+                <BlogForm
+                  addBlog={addBlog}
+                  handleTitleChange={handleTitleChange}
+                  handleAuthorChange={handleAuthorChange}
+                  handleUrlChange={handleUrlChange}
+                  newTitle={newTitle}
+                  newAuthor={newAuthor}
+                  newUrl={newUrl}
+                />
+              </Togglable>
+            </div>
             <h2>Blogs</h2>
             {blogs.map(blog => <Blog key={blog.id} blog={blog} />)}
           </>
         }
     </div>
   )
-
 }
 
 export default App
