@@ -1,31 +1,16 @@
 import { useState, useEffect, useRef } from 'react'
+
 import Blog from './components/Blog'
 import Togglable from './components/Togglable'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
+import Button from './components/Button'
+import Notification from './components/Notification'
+
 import blogService from './services/blogs'
 import loginService from './services/login'
+
 import './index.css'
-
-const Notification = ({ message, className }) => {
-  if (message === null) {
-    return null
-  }
-
-  return (
-    <div className={className}>
-      {message}
-    </div>
-  )
-}
-
-const Button = ({ text, handler }) => {
-  return (
-    <button onClick={handler}>
-      {text}
-    </button>
-  )
-}
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
