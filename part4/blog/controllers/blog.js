@@ -7,6 +7,11 @@ blogRouter.get('/', async (request, response) => {
     response.json(blogs)
 })
 
+blogRouter.get('/:id', async (request, response) => {
+    const blog = await Blog.findById(request.params.id)
+    response.json(blog)
+})
+
 blogRouter.post('/', async (request, response) => {
     const body = request.body
     const user = await User.findById(request.user.id) // need to generate user model for .concat() + .save()
