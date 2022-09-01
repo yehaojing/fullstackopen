@@ -16,12 +16,7 @@ const getAll = () => {
   return request.then(response => response.data)
 }
 
-const postNewBlog = (newTitle, newAuthor, newUrl) => {
-  const newBlog = {
-    title: newTitle, 
-    author: newAuthor,
-    url: newUrl
-  }
+const postNewBlog = (newBlog) => {
   const config = {
     headers: { Authorization: token },
   }
@@ -30,5 +25,10 @@ const postNewBlog = (newTitle, newAuthor, newUrl) => {
   return request.then(response => response.data)
 }
 
+const exportedObject = {
+  setToken,
+  getAll,
+  postNewBlog
+}
 
-export default { setToken, getAll, postNewBlog}
+export default exportedObject
