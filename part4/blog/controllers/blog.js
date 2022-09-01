@@ -9,7 +9,7 @@ blogRouter.get('/', async (request, response) => {
 
 blogRouter.get('/:id', async (request, response) => {
     const blog = await Blog.findById(request.params.id)
-    response.json(blog)
+    response.json(await blog.populate('user'))
 })
 
 blogRouter.post('/', async (request, response) => {
@@ -35,10 +35,10 @@ blogRouter.post('/', async (request, response) => {
 
 blogRouter.delete('/:id', async (request, response) => {
     const user = request.user
-
     const blog = await Blog.findById(request.params.id)
     if (blog) {
-        if (blog.user.toString() === user.id.toString()) {
+        await blog.populate('user')
+        if (blog.user._id.toString() === user.id.toString()) {
             await Blog.findByIdAndDelete(request.params.id)
             response.status(204).end()
         } else {
@@ -47,8 +47,6 @@ blogRouter.delete('/:id', async (request, response) => {
     } else {
         response.status(404).end()
     }
-
-
 })
 
 blogRouter.put('/:id', async (request, response) => {

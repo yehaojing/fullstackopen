@@ -80,8 +80,23 @@ const App = () => {
     })
   }
 
-  const likeBlogHandler = (blog) => {
-    blogService.likeBlog(blog)
+  const likeBlogHandler = async (blog) => {
+    const response = await blogService.likeBlog(blog)
+    return response.data
+  }
+
+  const deleteBlogHandler = (blog) => {
+    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
+      blogService.deleteBlog(blog)
+      .then(() => setBlogs(blogs.filter(item => item !== blog)))
+      .catch((error) => {
+        console.log("What")
+        setErrorMessage(`${error}`)
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
+      })
+    }
   }
 
   const blogFormRef = useRef()
@@ -105,7 +120,7 @@ const App = () => {
             <h2>Blogs</h2>
             {blogs
             .sort((blogA, blogB) => blogB.likes - blogA.likes)
-            .map((blog) => <Blog key={blog.id} blog={blog} likeBlogHandler={likeBlogHandler}/>)}
+            .map((blog) => <Blog key={blog.id} blog={blog} likeBlogHandler={likeBlogHandler} deleteBlogHandler={deleteBlogHandler}/>)}
           </>
         }
     </div>

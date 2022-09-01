@@ -1,17 +1,21 @@
 import Button from './Button'
 import { useState } from 'react'
 
-const Blog = ({blog, likeBlogHandler}) => {
+const Blog = ({blog, likeBlogHandler, deleteBlogHandler}) => {
   const [toggleView, setToggleView] = useState(false)
   const inlineStyleView = { display: toggleView ? '' : 'none' }
 
   const [blogLikes, setBlogLikes] = useState(blog.likes)
 
-  const likeBlog = (event) => {
+  const likeBlog = async (event) => {
     event.preventDefault()
-    likeBlogHandler(blog)
-    setBlogLikes(blogLikes + 1)
+    const response = await likeBlogHandler(blog)
+    setBlogLikes(response.likes)
+  }
 
+  const deleteBlog = (event) => {
+    event.preventDefault()
+    deleteBlogHandler(blog)
   }
 
   return (
@@ -21,7 +25,10 @@ const Blog = ({blog, likeBlogHandler}) => {
           URL: {blog.url}
         </div>
         <div style={inlineStyleView}>
-          Likes: {blogLikes} <Button text="Like" handler={likeBlog}/>
+          Likes: {blogLikes ? blogLikes : 0} <Button text="Like" handler={likeBlog}/>
+        </div>
+        <div style={inlineStyleView}>
+          <Button text="remove" handler={deleteBlog}/>
         </div>
     </div>
   )
