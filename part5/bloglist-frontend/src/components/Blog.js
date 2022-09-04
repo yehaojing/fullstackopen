@@ -1,5 +1,6 @@
 import Button from './Button'
 import { useState } from 'react'
+import PropTypes from 'prop-types'
 
 const Blog = ({blog, likeBlogHandler, deleteBlogHandler}) => {
   const [toggleView, setToggleView] = useState(false)
@@ -32,6 +33,12 @@ const Blog = ({blog, likeBlogHandler, deleteBlogHandler}) => {
         </div>
     </div>
   )
+}
+
+Blog.propTypes = {
+  blog: PropTypes.object.isRequired,
+  likeBlogHandler: PropTypes.func.isRequired,
+  deleteBlogHandler: PropTypes.func.isRequired
 }
 
 export default Blog
