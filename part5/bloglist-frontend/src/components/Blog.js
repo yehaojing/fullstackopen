@@ -2,7 +2,7 @@ import Button from './Button'
 import { useState } from 'react'
 import PropTypes from 'prop-types'
 
-const Blog = ({blog, likeBlogHandler, deleteBlogHandler}) => {
+const Blog = ({ blog, likeBlogHandler, deleteBlogHandler }) => {
   const [toggleView, setToggleView] = useState(false)
   const inlineStyleView = { display: toggleView ? '' : 'none' }
 
@@ -20,17 +20,17 @@ const Blog = ({blog, likeBlogHandler, deleteBlogHandler}) => {
   }
 
   return (
-    <div className="blog">
-      {blog.title} {blog.author} {blog.id} <Button text={toggleView ? "hide" : "show"} handler={() => setToggleView(!toggleView)}/>
-        <div style={inlineStyleView}>
-          URL: {blog.url}
-        </div>
-        <div style={inlineStyleView}>
-          Likes: {blogLikes ? blogLikes : 0} <Button text="Like" handler={likeBlog}/>
-        </div>
-        <div style={inlineStyleView}>
-          <Button text="remove" handler={deleteBlog}/>
-        </div>
+    <div className='blog'>
+      {blog.title} {blog.author} {blog.id} <Button text={toggleView ? 'hide' : 'show'} handler={() => setToggleView(!toggleView)}/>
+      <div style={inlineStyleView}>
+        URL: {blog.url}
+      </div>
+      <div style={inlineStyleView}>
+        Likes: {blogLikes ? blogLikes : 0} <Button text='Like' handler={likeBlog}/>
+      </div>
+      <div style={inlineStyleView}>
+        <Button text='remove' handler={deleteBlog}/>
+      </div>
     </div>
   )
 }

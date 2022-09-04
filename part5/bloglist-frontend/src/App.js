@@ -55,7 +55,7 @@ const App = () => {
     }
   }
 
-  const logoutHandler = (event) => {
+  const logoutHandler = () => {
     setUser(null)
     window.localStorage.removeItem('loggedBlogAppUser')
   }
@@ -63,21 +63,21 @@ const App = () => {
   const createBlog = (newBlog) => {
     blogFormRef.current.toggleVisibility()
     blogService.postNewBlog(newBlog)
-    .then(
-      resp => {
-        newBlog.id = resp.id
-        setBlogs(blogs.concat(newBlog))
-        setNewBlogMessage(`a new blog "${newBlog.title}" by ${newBlog.author} added`)
+      .then(
+        resp => {
+          newBlog.id = resp.id
+          setBlogs(blogs.concat(newBlog))
+          setNewBlogMessage(`a new blog "${newBlog.title}" by ${newBlog.author} added`)
+          setTimeout(() => {
+            setNewBlogMessage(null)
+          }, 5000)
+        })
+      .catch((error) => {
+        setErrorMessage(`${error}`)
         setTimeout(() => {
-          setNewBlogMessage(null)
+          setErrorMessage(null)
         }, 5000)
-    })
-    .catch((error) => {
-      setErrorMessage(`${error}`)
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
-    })
+      })
   }
 
   const likeBlogHandler = async (blog) => {
@@ -88,14 +88,13 @@ const App = () => {
   const deleteBlogHandler = (blog) => {
     if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
       blogService.deleteBlog(blog)
-      .then(() => setBlogs(blogs.filter(item => item !== blog)))
-      .catch((error) => {
-        console.log("What")
-        setErrorMessage(`${error}`)
-        setTimeout(() => {
-          setErrorMessage(null)
-        }, 5000)
-      })
+        .then(() => setBlogs(blogs.filter(item => item !== blog)))
+        .catch((error) => {
+          setErrorMessage(`${error}`)
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 5000)
+        })
     }
   }
 
@@ -103,26 +102,26 @@ const App = () => {
 
   return (
     <div>
-      <Notification message={newBlogMessage} className="new"/>
-      <Notification message={errorMessage} className="error"/>
+      <Notification message={newBlogMessage} className="new" />
+      <Notification message={errorMessage} className="error" />
       {
         user === null
-        ? <LoginForm loginHandler={handleLogin}/>
-        : <>
+          ? <LoginForm loginHandler={handleLogin} />
+          : <>
             <div>
               Logged in as {user.name} <Button text="logout" handler={logoutHandler} />
             </div>
             <div>
               <Togglable buttonLabel="new blog" ref={blogFormRef}>
-                <BlogForm createBlog={createBlog}/>
+                <BlogForm createBlog={createBlog} />
               </Togglable>
             </div>
             <h2>Blogs</h2>
             {blogs
-            .sort((blogA, blogB) => blogB.likes - blogA.likes)
-            .map((blog) => <Blog key={blog.id} blog={blog} likeBlogHandler={likeBlogHandler} deleteBlogHandler={deleteBlogHandler}/>)}
+              .sort((blogA, blogB) => blogB.likes - blogA.likes)
+              .map((blog) => <Blog key={blog.id} blog={blog} likeBlogHandler={likeBlogHandler} deleteBlogHandler={deleteBlogHandler} />)}
           </>
-        }
+      }
     </div>
   )
 }

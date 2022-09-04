@@ -6,10 +6,10 @@ const LoginForm = ({ loginHandler }) => {
   const [password, setPassword] = useState('')
 
   const login = (event) => {
-      event.preventDefault()
-      loginHandler(username, password)
-      setUsername('')
-      setPassword('')
+    event.preventDefault()
+    loginHandler(username, password)
+    setUsername('')
+    setPassword('')
   }
 
   return (
