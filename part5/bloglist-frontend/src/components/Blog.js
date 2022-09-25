@@ -22,10 +22,10 @@ const Blog = ({ blog, likeBlogHandler, deleteBlogHandler }) => {
   return (
     <div className='blog'>
       {blog.title} {blog.author} {blog.id} <Button text={toggleView ? 'hide' : 'show'} handler={() => setToggleView(!toggleView)}/>
-      <div style={inlineStyleView}>
+      <div className='url' style={inlineStyleView}>
         URL: {blog.url}
       </div>
-      <div style={inlineStyleView}>
+      <div className='likes' style={inlineStyleView}>
         Likes: {blogLikes ? blogLikes : 0} <Button text='Like' handler={likeBlog}/>
       </div>
       <div style={inlineStyleView}>
