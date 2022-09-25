@@ -53,3 +53,47 @@ test('toggle visibility test', async () => {
   expect(likesText).toBeVisible()
   expect(urlText).toBeVisible()
 })
+
+test('test the like button works (twice)', async () => {
+  let likes = 0
+
+  const preLikesBlog = {
+    title: 'Component testing is done with react-testing-library',
+    author: 'J. Smith',
+    id: '1234567890',
+    url: 'testing.com',
+    likes: likes
+  }
+
+  const mockLikeBlogHandler = jest
+    .fn()
+    .mockImplementation(() => {
+      likes = likes + 1
+      console.log({ response:{ likes: likes } })
+      return { response:{ likes: likes } }
+    }
+    )
+  const mockDeleteBlogHandler = jest.fn()
+
+  const user = userEvent.setup()
+
+  render(<Blog blog={preLikesBlog} deleteBlogHandler={mockDeleteBlogHandler} likeBlogHandler={mockLikeBlogHandler}/>)
+  const likeButton = screen.getByText('Like')
+  await user.click(likeButton)
+  await user.click(likeButton)
+
+  const postLikesBlog = {
+    title: 'Component testing is done with react-testing-library',
+    author: 'J. Smith',
+    id: '1234567890',
+    url: 'testing.com',
+    likes: likes
+  }
+
+  const { container } = render(<Blog blog={postLikesBlog} deleteBlogHandler={mockDeleteBlogHandler} likeBlogHandler={mockLikeBlogHandler}/>)
+  const likesText = container.querySelector('.likes')
+  screen.debug()
+  expect(mockLikeBlogHandler.mock.calls).toHaveLength(2)
+
+  expect(likesText).toHaveTextContent(`Likes: ${likes}`)
+})
