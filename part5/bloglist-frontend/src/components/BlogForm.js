@@ -25,13 +25,13 @@ const BlogForm = ({ createBlog }) => {
       <h1>Add new blog</h1>
       <form onSubmit={addBlog}>
         <div>
-            Title <input value={newTitle} onChange={({ target }) => setNewTitle(target.value)} />
+            Title <input aria-label="Title" value={newTitle} onChange={({ target }) => setNewTitle(target.value)} />
         </div>
         <div>
-            Author <input value={newAuthor} onChange={({ target }) => setNewAuthor(target.value)} />
+            Author <input aria-label="Author" value={newAuthor} onChange={({ target }) => setNewAuthor(target.value)} />
         </div>
         <div>
-            URL <input value={newUrl} onChange={({ target }) => setNewUrl(target.value)} />
+            URL <input aria-label="URL" value={newUrl} onChange={({ target }) => setNewUrl(target.value)} />
         </div>
         <div>
           <button type="submit">Create</button>
