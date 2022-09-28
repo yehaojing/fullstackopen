@@ -21,12 +21,12 @@ const Blog = ({ blog, likeBlogHandler, deleteBlogHandler }) => {
 
   return (
     <div className='blog'>
-      {blog.title} {blog.author} {blog.id} <Button text={toggleView ? 'hide' : 'show'} handler={() => setToggleView(!toggleView)}/>
+      {blog.title} {blog.author} {blog.id} <Button className='toggleBlogVisibilityButton' text={toggleView ? 'hide' : 'show'} handler={() => setToggleView(!toggleView)}/>
       <div className='url' style={inlineStyleView}>
         URL: {blog.url}
       </div>
       <div className='likes' style={inlineStyleView}>
-        Likes: {blogLikes ? blogLikes : 0} <Button text='Like' handler={likeBlog}/>
+        Likes: {blogLikes ? blogLikes : 0} <Button className='likeButton' text='Like' handler={likeBlog}/>
       </div>
       <div style={inlineStyleView}>
         <Button text='remove' handler={deleteBlog}/>

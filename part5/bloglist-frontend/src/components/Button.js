@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types'
 
-const Button = ({ text, handler }) => {
+const Button = ({ text, handler, className }) => {
   return (
-    <button onClick={handler}>
+    <button onClick={handler} className={className}>
       {text}
     </button>
   )
