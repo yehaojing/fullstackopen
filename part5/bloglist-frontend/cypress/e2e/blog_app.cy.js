@@ -45,9 +45,19 @@ describe('Blog app', function() {
       cy.get(`[aria-label="Author"]`).type('Test Author')
       cy.get(`[aria-label="URL"]`).type('testurl.com')
       cy.contains('Create').click()
-      cy.contains('show').click()
       cy.contains('Test Blog Test Author')
-      cy.contains('URL: testurl.com')
+    })
+
+    it('A blog can be liked', function () {
+      cy.contains('new blog').click()
+      cy.get(`[aria-label="Title"]`).type('Test Blog')
+      cy.get(`[aria-label="Author"]`).type('Test Author')
+      cy.get(`[aria-label="URL"]`).type('testurl.com')
+      cy.contains('Create').click()
+      cy.contains('show').click()
+      cy.contains('Likes: 0')
+      cy.contains('Like').click()
+      cy.contains('Likes: 1')
     })
   })
 
