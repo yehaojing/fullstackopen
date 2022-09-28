@@ -27,7 +27,27 @@ describe('Blog app', function() {
       cy.get('input:first').type(user.username)
       cy.get('input:last').type(user.password)
       cy.contains('login').click()
-      cy.contains('Logged in as Cypress Test User')
+      cy.contains(`Logged in as ${user.name}`)
+    })
+  })
+
+  describe('When logged in', function() {
+    beforeEach(function() {
+      cy.get('input:first').type(user.username)
+      cy.get('input:last').type(user.password)
+      cy.contains('login').click()
+      cy.contains(`Logged in as ${user.name}`)
+    })
+
+    it('A blog can be created', function () {
+      cy.contains('new blog').click()
+      cy.get(`[aria-label="Title"]`).type('Test Blog')
+      cy.get(`[aria-label="Author"]`).type('Test Author')
+      cy.get(`[aria-label="URL"]`).type('testurl.com')
+      cy.contains('Create').click()
+      cy.contains('show').click()
+      cy.contains('Test Blog Test Author')
+      cy.contains('URL: testurl.com')
     })
   })
 
