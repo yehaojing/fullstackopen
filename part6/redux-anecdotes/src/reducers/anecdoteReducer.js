@@ -39,4 +39,25 @@ const reducer = (state = initialState, action) => {
   }
 }
 
+export const vote = (id) => {
+  return {
+    type: 'VOTE',
+    data: { id }
+  }
+}
+
+export const addAnecdote = (event) => {
+  event.preventDefault()
+  const content = event.target.anecdote.value
+  event.target.anecdote.value = ''
+  return {
+    type: 'ADD_NEW_ANECDOTE',
+    data: { 
+      content,
+      votes: 0,
+      id: (100000 * Math.random()).toFixed(0)
+    }
+  }
+}
+
 export default reducer
