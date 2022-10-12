@@ -8,8 +8,10 @@ const AnecdoteForm = () => {
         <>
             <h2>create new</h2>
                 <form onSubmit={(event) => {
+                    event.preventDefault()
                     dispatch(showNotification(`Created new anecdote: ${event.target.anecdote.value}`))
-                    dispatch(addAnecdote(event))
+                    dispatch(addAnecdote(event.target.anecdote.value))
+                    event.target.anecdote.value = ''
                 }
                     }>
                     <div>

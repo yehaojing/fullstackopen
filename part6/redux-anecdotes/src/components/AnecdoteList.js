@@ -4,7 +4,7 @@ import { showNotification } from '../reducers/notificationReducer'
 
 const AnecdoteList = () => {
   const anecdotes = useSelector(
-    state => state.anecdotes
+    state => state.anecdotes.slice()
       .sort((anecdoteA, anecdoteB) => anecdoteB.votes - anecdoteA.votes)
       .filter((anecdote) => anecdote.content.toLowerCase().indexOf(state.filter.toLowerCase()) !== -1)
   )
@@ -20,7 +20,8 @@ const AnecdoteList = () => {
             </div>
             <div>
               has {anecdote.votes}
-              <button onClick={() => {
+              <button onClick={(event) => {
+                event.preventDefault()
                 dispatch(vote(anecdote.id))
                 dispatch(showNotification(`You voted "${anecdote.content}"`))
               }}
