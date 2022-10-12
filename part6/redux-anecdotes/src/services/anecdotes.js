@@ -13,4 +13,9 @@ const createAnecdote = async (content) => {
   return response.data
 }
 
-export default { getAll, createAnecdote }
+const exportObject = {
+  getAll,
+  createAnecdote
+}
+
+export default exportObject
