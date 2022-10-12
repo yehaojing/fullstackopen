@@ -4,10 +4,13 @@ import { showNotification } from '../reducers/notificationReducer'
 
 const AnecdoteList = () => {
   const anecdotes = useSelector(
-    state => state.anecdotes.slice()
+    state => {
+      return state.anecdotes.slice()
       .sort((anecdoteA, anecdoteB) => anecdoteB.votes - anecdoteA.votes)
-      .filter((anecdote) => anecdote.content.toLowerCase().indexOf(state.filter.toLowerCase()) !== -1)
+      .filter((anecdote) => anecdote.content.toLowerCase().indexOf(state.filter.toLowerCase()) !== -1 )
+    }
   )
+
   const dispatch = useDispatch()
   return (
     <>
