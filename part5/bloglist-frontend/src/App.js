@@ -7,6 +7,9 @@ import BlogForm from "./components/BlogForm";
 import Button from "./components/Button";
 import Notification from "./components/Notification";
 
+import { showNotification } from "./reducers/notificationReducer";
+import { useDispatch } from "react-redux";
+
 import blogService from "./services/blogs";
 import loginService from "./services/login";
 
@@ -15,8 +18,8 @@ import "./index.css";
 const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [user, setUser] = useState(null);
-  const [errorMessage, setErrorMessage] = useState(null);
-  const [newBlogMessage, setNewBlogMessage] = useState(null);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("loggedBlogAppUser");
@@ -43,12 +46,12 @@ const App = () => {
       blogService.setToken(user.token);
       setUser(user);
     } catch (exception) {
-      setErrorMessage("Wrong username or password");
+      dispatch(showNotification("Wrong username or password"));
       blogService.setToken("");
       setUser(null);
-      setTimeout(() => {
-        setErrorMessage(null);
-      }, 5000);
+      // setTimeout(() => {
+      //   dispatch(showNotification(null);
+      // }, 5000);
     }
   };
 
@@ -64,18 +67,18 @@ const App = () => {
       .then((resp) => {
         newBlog.id = resp.id;
         setBlogs(blogs.concat(newBlog));
-        setNewBlogMessage(
+        dispatch(showNotification(
           `a new blog "${newBlog.title}" by ${newBlog.author} added`
-        );
-        setTimeout(() => {
-          setNewBlogMessage(null);
-        }, 5000);
+        ));
+        // setTimeout(() => {
+        //   dispatch(showNotification(null);
+        // }, 5000);
       })
       .catch((error) => {
-        setErrorMessage(`${error}`);
-        setTimeout(() => {
-          setErrorMessage(null);
-        }, 5000);
+        dispatch(showNotification(`${error}`));
+        // setTimeout(() => {
+        //   dispatch(showNotification(null);
+        // }, 5000);
       });
   };
 
@@ -90,10 +93,10 @@ const App = () => {
         .deleteBlog(blog)
         .then(() => setBlogs(blogs.filter((item) => item !== blog)))
         .catch((error) => {
-          setErrorMessage(`${error}`);
-          setTimeout(() => {
-            setErrorMessage(null);
-          }, 5000);
+          dispatch(showNotification(`${error}`));
+          // setTimeout(() => {
+          //   dispatch(showNotification(null);
+          // }, 5000);
         });
     }
   };
@@ -102,8 +105,7 @@ const App = () => {
 
   return (
     <div>
-      <Notification message={newBlogMessage} className="new" />
-      <Notification message={errorMessage} className="error" />
+      <Notification />
       {user === null ? (
         <LoginForm loginHandler={handleLogin} />
       ) : (
