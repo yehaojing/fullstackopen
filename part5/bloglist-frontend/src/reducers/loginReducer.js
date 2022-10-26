@@ -1,16 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
 // import loginService from "../services/login";
 
-const userSlice = createSlice({
-  name: "user",
+const loginSlice = createSlice({
+  name: "login",
   initialState: null,
   reducers: {
-    setUser(state, action) {
+    setLogin(state, action) {
       return action.payload;
     }
   }
 });
 
-export const { setUser } = userSlice.actions;
+export const { setLogin } = loginSlice.actions;
 
-export default userSlice.reducer;
+export default loginSlice.reducer;

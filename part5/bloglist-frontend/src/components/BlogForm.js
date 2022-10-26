@@ -1,61 +1,83 @@
-import { useState } from "react";
-import PropTypes from "prop-types";
+import { useState, useRef } from "react";
+import Togglable from "./Togglable";
 
-const BlogForm = ({ createBlog }) => {
+import { showNotification } from "../reducers/notificationReducer";
+import { addBlog } from "../reducers/blogReducer";
+import { useDispatch } from "react-redux";
+
+import blogService from "../services/blogs";
+import { initialiseUsers } from "../reducers/usersReducer";
+
+const BlogForm = () => {
   const [newTitle, setNewTitle] = useState("");
   const [newAuthor, setNewAuthor] = useState("");
   const [newUrl, setNewUrl] = useState("");
 
-  const addBlog = (event) => {
+  const dispatch = useDispatch();
+  const blogFormRef = useRef();
+
+  const createBlogHandler = (event) => {
     event.preventDefault();
-    createBlog({
+    blogFormRef.current.toggleVisibility();
+    const newBlog = {
       title: newTitle,
       author: newAuthor,
       url: newUrl,
-    });
+    };
     setNewTitle("");
     setNewAuthor("");
     setNewUrl("");
+    blogService
+      .postNewBlog(newBlog)
+      .then((resp) => {
+        newBlog.id = resp.id;
+        dispatch(addBlog(newBlog));
+        dispatch(showNotification(
+          `a new blog "${newBlog.title}" by ${newBlog.author} added`
+        ));
+        dispatch(initialiseUsers());
+      })
+      .catch((error) => {
+        dispatch(showNotification(`${error}`));
+      });
   };
 
   return (
-    <div>
-      <h1>Add new blog</h1>
-      <form onSubmit={addBlog}>
-        <div>
-          Title{" "}
-          <input
-            aria-label="Title"
-            value={newTitle}
-            onChange={({ target }) => setNewTitle(target.value)}
-          />
-        </div>
-        <div>
-          Author{" "}
-          <input
-            aria-label="Author"
-            value={newAuthor}
-            onChange={({ target }) => setNewAuthor(target.value)}
-          />
-        </div>
-        <div>
-          URL{" "}
-          <input
-            aria-label="URL"
-            value={newUrl}
-            onChange={({ target }) => setNewUrl(target.value)}
-          />
-        </div>
-        <div>
-          <button type="submit">Create</button>
-        </div>
-      </form>
-    </div>
+    <Togglable buttonLabel="new blog" ref={blogFormRef}>
+      <div>
+        <h1>Add new blog</h1>
+        <form onSubmit={createBlogHandler}>
+          <div>
+            Title{" "}
+            <input
+              aria-label="Title"
+              value={newTitle}
+              onChange={({ target }) => setNewTitle(target.value)}
+            />
+          </div>
+          <div>
+            Author{" "}
+            <input
+              aria-label="Author"
+              value={newAuthor}
+              onChange={({ target }) => setNewAuthor(target.value)}
+            />
+          </div>
+          <div>
+            URL{" "}
+            <input
+              aria-label="URL"
+              value={newUrl}
+              onChange={({ target }) => setNewUrl(target.value)}
+            />
+          </div>
+          <div>
+            <button type="submit">Create</button>
+          </div>
+        </form>
+      </div>
+    </Togglable>
   );
-};
-
-BlogForm.propTypes = {
-  createBlog: PropTypes.func.isRequired,
 };
 
 export default BlogForm;

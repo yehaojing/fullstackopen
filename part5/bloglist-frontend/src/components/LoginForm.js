@@ -3,7 +3,7 @@ import loginService from "../services/login";
 import blogService from "../services/blogs";
 
 import { useDispatch } from "react-redux";
-import { setUser } from "../reducers/userReducer";
+import { setLogin } from "../reducers/loginReducer";
 import { showNotification } from "../reducers/notificationReducer";
 
 const LoginForm = () => {
@@ -20,11 +20,11 @@ const LoginForm = () => {
       });
       window.localStorage.setItem("loggedBlogAppUser", JSON.stringify(user));
       blogService.setToken(user.token);
-      dispatch(setUser(user));
+      dispatch(setLogin(user));
     } catch (exception) {
       dispatch(showNotification("Wrong username or password"));
       blogService.setToken("");
-      dispatch(setUser(null));
+      dispatch(setLogin(null));
     }
   };
 
