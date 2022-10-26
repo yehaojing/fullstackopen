@@ -8,7 +8,8 @@ import Button from "./components/Button";
 import Notification from "./components/Notification";
 
 import { showNotification } from "./reducers/notificationReducer";
-import { useDispatch } from "react-redux";
+import { addBlog, initialiseBlogs, removeBlog } from "./reducers/blogReducer";
+import { useDispatch, useSelector } from "react-redux";
 
 import blogService from "./services/blogs";
 import loginService from "./services/login";
@@ -16,7 +17,9 @@ import loginService from "./services/login";
 import "./index.css";
 
 const App = () => {
-  const [blogs, setBlogs] = useState([]);
+  const blogs = useSelector(
+    state =>  state.blog.slice()
+  );
   const [user, setUser] = useState(null);
 
   const dispatch = useDispatch();
@@ -32,7 +35,7 @@ const App = () => {
 
   useEffect(() => {
     if (user !== null) {
-      blogService.getAll().then((blogs) => setBlogs(blogs));
+      dispatch(initialiseBlogs());
     }
   }, [user]);
 
@@ -66,7 +69,7 @@ const App = () => {
       .postNewBlog(newBlog)
       .then((resp) => {
         newBlog.id = resp.id;
-        setBlogs(blogs.concat(newBlog));
+        dispatch(addBlog(newBlog));
         dispatch(showNotification(
           `a new blog "${newBlog.title}" by ${newBlog.author} added`
         ));
@@ -91,7 +94,7 @@ const App = () => {
     if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
       blogService
         .deleteBlog(blog)
-        .then(() => setBlogs(blogs.filter((item) => item !== blog)))
+        .then(() => dispatch(removeBlog(blog)))
         .catch((error) => {
           dispatch(showNotification(`${error}`));
           // setTimeout(() => {
