@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 
 import Blog from "./components/Blog";
 import Togglable from "./components/Togglable";
@@ -9,26 +9,28 @@ import Notification from "./components/Notification";
 
 import { showNotification } from "./reducers/notificationReducer";
 import { addBlog, initialiseBlogs } from "./reducers/blogReducer";
+import { setUser } from "./reducers/userReducer";
 import { useDispatch, useSelector } from "react-redux";
 
 import blogService from "./services/blogs";
-import loginService from "./services/login";
 
 import "./index.css";
 
 const App = () => {
   const blogs = useSelector(
-    state =>  state.blog.slice()
+    state => state.blog.slice()
   );
-  const [user, setUser] = useState(null);
 
+  const user = useSelector(
+    state => state.user
+  );
   const dispatch = useDispatch();
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("loggedBlogAppUser");
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON);
-      setUser(user);
+      dispatch(setUser(user));
       blogService.setToken(user.token);
     }
   }, []);
@@ -39,27 +41,8 @@ const App = () => {
     }
   }, [user]);
 
-  const handleLogin = async (username, password) => {
-    try {
-      const user = await loginService.login({
-        username,
-        password,
-      });
-      window.localStorage.setItem("loggedBlogAppUser", JSON.stringify(user));
-      blogService.setToken(user.token);
-      setUser(user);
-    } catch (exception) {
-      dispatch(showNotification("Wrong username or password"));
-      blogService.setToken("");
-      setUser(null);
-      // setTimeout(() => {
-      //   dispatch(showNotification(null);
-      // }, 5000);
-    }
-  };
-
   const logoutHandler = () => {
-    setUser(null);
+    dispatch(setUser(null));
     window.localStorage.removeItem("loggedBlogAppUser");
   };
 
@@ -73,15 +56,9 @@ const App = () => {
         dispatch(showNotification(
           `a new blog "${newBlog.title}" by ${newBlog.author} added`
         ));
-        // setTimeout(() => {
-        //   dispatch(showNotification(null);
-        // }, 5000);
       })
       .catch((error) => {
         dispatch(showNotification(`${error}`));
-        // setTimeout(() => {
-        //   dispatch(showNotification(null);
-        // }, 5000);
       });
   };
 
@@ -91,7 +68,7 @@ const App = () => {
     <div>
       <Notification />
       {user === null ? (
-        <LoginForm loginHandler={handleLogin} />
+        <LoginForm />
       ) : (
         <>
           <div>

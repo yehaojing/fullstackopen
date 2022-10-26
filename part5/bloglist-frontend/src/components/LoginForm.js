@@ -1,9 +1,32 @@
 import { useState } from "react";
-import PropTypes from "prop-types";
+import loginService from "../services/login";
+import blogService from "../services/blogs";
 
-const LoginForm = ({ loginHandler }) => {
+import { useDispatch } from "react-redux";
+import { setUser } from "../reducers/userReducer";
+import { showNotification } from "../reducers/notificationReducer";
+
+const LoginForm = () => {
+  const dispatch = useDispatch();
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
+  const loginHandler = async (username, password) => {
+    try {
+      const user = await loginService.login({
+        username,
+        password,
+      });
+      window.localStorage.setItem("loggedBlogAppUser", JSON.stringify(user));
+      blogService.setToken(user.token);
+      dispatch(setUser(user));
+    } catch (exception) {
+      dispatch(showNotification("Wrong username or password"));
+      blogService.setToken("");
+      dispatch(setUser(null));
+    }
+  };
 
   const login = (event) => {
     event.preventDefault();
@@ -38,10 +61,6 @@ const LoginForm = ({ loginHandler }) => {
       </form>
     </div>
   );
-};
-
-LoginForm.propTypes = {
-  loginHandler: PropTypes.func.isRequired,
 };
 
 export default LoginForm;
