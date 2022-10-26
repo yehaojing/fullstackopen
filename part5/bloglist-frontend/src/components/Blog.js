@@ -2,21 +2,34 @@ import Button from "./Button";
 import { useState } from "react";
 import PropTypes from "prop-types";
 
-const Blog = ({ blog, likeBlogHandler, deleteBlogHandler }) => {
+import blogService from "../services/blogs";
+import { showNotification } from "../reducers/notificationReducer";
+import { removeBlog, likeBlog } from "../reducers/blogReducer";
+import { useDispatch } from "react-redux";
+
+const Blog = ({ blog }) => {
+
+  const dispatch = useDispatch();
+
   const [toggleView, setToggleView] = useState(false);
   const inlineStyleView = { display: toggleView ? "" : "none" };
 
-  const [blogLikes, setBlogLikes] = useState(blog.likes);
-
-  const likeBlog = async (event) => {
+  const likeBlogHandler = async (event) => {
     event.preventDefault();
-    const response = await likeBlogHandler(blog);
-    setBlogLikes(response.likes);
+    const response = await blogService.likeBlog(blog);
+    dispatch(likeBlog(response.data));
   };
 
-  const deleteBlog = (event) => {
+  const deleteBlogHandler = (event) => {
     event.preventDefault();
-    deleteBlogHandler(blog);
+    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
+      blogService
+        .deleteBlog(blog)
+        .then(() => dispatch(removeBlog(blog)))
+        .catch((error) => {
+          dispatch(showNotification(`${error}`));
+        });
+    }
   };
 
   return (
@@ -31,20 +44,18 @@ const Blog = ({ blog, likeBlogHandler, deleteBlogHandler }) => {
         URL: {blog.url}
       </div>
       <div className="likes" style={inlineStyleView}>
-        Likes: {blogLikes ? blogLikes : 0}{" "}
-        <Button className="likeButton" text="Like" handler={likeBlog} />
+        Likes: {blog.likes ? blog.likes : 0}{" "}
+        <Button className="likeButton" text="Like" handler={likeBlogHandler} />
       </div>
       <div style={inlineStyleView}>
-        <Button text="remove" handler={deleteBlog} />
+        <Button text="remove" handler={deleteBlogHandler} />
       </div>
     </div>
   );
 };
 
 Blog.propTypes = {
-  blog: PropTypes.object.isRequired,
-  likeBlogHandler: PropTypes.func.isRequired,
-  deleteBlogHandler: PropTypes.func.isRequired,
+  blog: PropTypes.object.isRequired
 };
 
 export default Blog;

@@ -8,7 +8,7 @@ import Button from "./components/Button";
 import Notification from "./components/Notification";
 
 import { showNotification } from "./reducers/notificationReducer";
-import { addBlog, initialiseBlogs, removeBlog } from "./reducers/blogReducer";
+import { addBlog, initialiseBlogs } from "./reducers/blogReducer";
 import { useDispatch, useSelector } from "react-redux";
 
 import blogService from "./services/blogs";
@@ -85,25 +85,6 @@ const App = () => {
       });
   };
 
-  const likeBlogHandler = async (blog) => {
-    const response = await blogService.likeBlog(blog);
-    return response.data;
-  };
-
-  const deleteBlogHandler = (blog) => {
-    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
-      blogService
-        .deleteBlog(blog)
-        .then(() => dispatch(removeBlog(blog)))
-        .catch((error) => {
-          dispatch(showNotification(`${error}`));
-          // setTimeout(() => {
-          //   dispatch(showNotification(null);
-          // }, 5000);
-        });
-    }
-  };
-
   const blogFormRef = useRef();
 
   return (
@@ -129,8 +110,6 @@ const App = () => {
               <Blog
                 key={blog.id}
                 blog={blog}
-                likeBlogHandler={likeBlogHandler}
-                deleteBlogHandler={deleteBlogHandler}
               />
             ))}
         </>
