@@ -25,6 +25,11 @@
   margin-bottom: 5px;
 }
 
+.navbar {
+  padding: 10px;
+  background-color: lightgrey;
+}
+
 html {
   font-family: sans-serif;
 }

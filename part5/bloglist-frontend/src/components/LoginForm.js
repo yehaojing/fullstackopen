@@ -5,6 +5,8 @@ import blogService from "../services/blogs";
 import { useDispatch } from "react-redux";
 import { setLogin } from "../reducers/loginReducer";
 import { showNotification } from "../reducers/notificationReducer";
+import { initialiseBlogs } from "../reducers/blogReducer";
+import { initialiseUsers } from "../reducers/usersReducer";
 
 const LoginForm = () => {
   const dispatch = useDispatch();
@@ -21,6 +23,8 @@ const LoginForm = () => {
       window.localStorage.setItem("loggedBlogAppUser", JSON.stringify(user));
       blogService.setToken(user.token);
       dispatch(setLogin(user));
+      dispatch(initialiseBlogs());
+      dispatch(initialiseUsers());
     } catch (exception) {
       dispatch(showNotification("Wrong username or password"));
       blogService.setToken("");

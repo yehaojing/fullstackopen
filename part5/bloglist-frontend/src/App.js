@@ -3,7 +3,7 @@ import NavBar from "./components/NavBar";
 import MainView from "./components/MainView";
 import LoginForm from "./components/LoginForm";
 import BlogForm from "./components/BlogForm";
-import Button from "./components/Button";
+
 import Notification from "./components/Notification";
 
 import { initialiseBlogs } from "./reducers/blogReducer";
@@ -33,27 +33,19 @@ const App = () => {
     }
   }, []);
 
-  const logoutHandler = () => {
-    dispatch(setLogin(null));
-    window.localStorage.removeItem("loggedBlogAppUser");
-  };
-
   return (
     <div>
-      <NavBar />
+
       <Notification />
       {login === null ? (
         <LoginForm />
       ) : (
         <>
-          <div>
-            Logged in as {login.name}{" "}
-            <Button text="logout" handler={logoutHandler} />
-          </div>
+          <NavBar />
+          <h1>Blogs</h1>
           <div>
             <BlogForm/>
           </div>
-          <h2>Blogs</h2>
           <MainView/>
         </>
       )}
