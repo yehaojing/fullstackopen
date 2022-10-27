@@ -1,18 +1,19 @@
 import Button from "./Button";
-import { useState } from "react";
-import PropTypes from "prop-types";
 
 import blogService from "../services/blogs";
 import { showNotification } from "../reducers/notificationReducer";
 import { removeBlog, likeBlog } from "../reducers/blogReducer";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useParams } from "react-router-dom";
 
-const Blog = ({ blog }) => {
+const Blog = () => {
 
   const dispatch = useDispatch();
-
-  const [toggleView, setToggleView] = useState(false);
-  const inlineStyleView = { display: toggleView ? "" : "none" };
+  const id = useParams().id;
+  const blog = useSelector((state) => state.blog.find((blog) => blog.id === id));
+  if (!blog) {
+    return (<></>);
+  }
 
   const likeBlogHandler = async (event) => {
     event.preventDefault();
@@ -33,29 +34,23 @@ const Blog = ({ blog }) => {
   };
 
   return (
-    <div className="blog">
-      {blog.title} {blog.author} {blog.id}{" "}
-      <Button
-        className="toggleBlogVisibilityButton"
-        text={toggleView ? "hide" : "show"}
-        handler={() => setToggleView(!toggleView)}
-      />
-      <div className="url" style={inlineStyleView}>
-        URL: {blog.url}
+    <div className="blog_box">
+      <h1>{blog.title} by {blog.author} </h1>
+      <div className="url">
+        URL: <Link>{blog.url}</Link>
       </div>
-      <div className="likes" style={inlineStyleView}>
+      <div className="likes">
         Likes: {blog.likes ? blog.likes : 0}{" "}
         <Button className="likeButton" text="Like" handler={likeBlogHandler} />
       </div>
-      <div style={inlineStyleView}>
+      <div>
+        added by {blog.user.name}
+      </div>
+      <div>
         <Button text="remove" handler={deleteBlogHandler} />
       </div>
     </div>
   );
-};
-
-Blog.propTypes = {
-  blog: PropTypes.object.isRequired
 };
 
 export default Blog;

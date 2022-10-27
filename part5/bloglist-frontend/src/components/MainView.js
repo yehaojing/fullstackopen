@@ -5,17 +5,18 @@ import { useSelector } from "react-redux";
 import BlogList from "./BlogList";
 import UserSummaries from "./UserSummary";
 import UserBlogList from "./UserBlogList";
+import Blog from "./Blog";
 
 const Menu = () => {
 
-  const match = useMatch("/users/:id");
+  const usersMatch = useMatch("/users/:id");
 
   const users = useSelector(
     state => state.users.slice()
   );
 
-  const user = match
-    ? users.find(user => user.id === match.params.id)
+  const user = usersMatch
+    ? users.find(user => user.id === usersMatch.params.id)
     : null;
 
   return (
@@ -24,6 +25,7 @@ const Menu = () => {
         <Route path="/" element={<BlogList />} />
         <Route path="/users" element={<UserSummaries />} />
         <Route path="/users/:id" element={<UserBlogList user={user}/>} />
+        <Route path="/blogs/:id" element={<Blog />} />
       </Routes>
     </>
   );

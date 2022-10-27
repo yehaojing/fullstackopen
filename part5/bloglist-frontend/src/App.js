@@ -28,15 +28,10 @@ const App = () => {
       const login = JSON.parse(loggedUserJSON);
       dispatch(setLogin(login));
       blogService.setToken(login.token);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (login !== null) {
       dispatch(initialiseBlogs());
       dispatch(initialiseUsers());
     }
-  }, [login]);
+  }, []);
 
   const logoutHandler = () => {
     dispatch(setLogin(null));

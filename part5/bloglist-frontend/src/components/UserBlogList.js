@@ -1,5 +1,4 @@
 const UserBlogList = ({ user }) => {
-  console.log(user);
   if (!user) {
     return (
       <div>User Not Found!</div>

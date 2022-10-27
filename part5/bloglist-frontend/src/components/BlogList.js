@@ -1,5 +1,7 @@
 import { useSelector } from "react-redux";
-import Blog from "./Blog";
+import {
+  Link
+} from "react-router-dom";
 
 const BlogList = () => {
 
@@ -12,10 +14,9 @@ const BlogList = () => {
       {blogs
         .sort((blogA, blogB) => blogB.likes - blogA.likes)
         .map((blog) => (
-          <Blog
-            key={blog.id}
-            blog={blog}
-          />
+          <div className="blog_box" key={blog.id}>
+            <Link to={`/blogs/${blog.id}`}>{blog.title} by {blog.author}</Link>
+          </div>
         ))}
     </>
   );
