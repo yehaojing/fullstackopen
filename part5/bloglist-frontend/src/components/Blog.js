@@ -47,7 +47,16 @@ const Blog = () => {
         added by {blog.user.name}
       </div>
       <div>
-        <Button text="remove" handler={deleteBlogHandler} />
+        <h2>Comments</h2>
+        <lu>
+          {blog.comments.map((comment, idx) => (<li key={idx}>{comment}</li>))}
+        </lu>
+      </div>
+      <div>
+        <h2>Delete Blog</h2>
+      </div>
+      <div>
+        <Button text="Delete Blog" handler={deleteBlogHandler} />
       </div>
     </div>
   );
