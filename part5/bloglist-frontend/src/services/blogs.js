@@ -25,6 +25,22 @@ const postNewBlog = (newBlog) => {
   return request.then((response) => response.data);
 };
 
+const commentBlog = async (blog, comment) => {
+  const commentPayload = { comment: comment };
+
+  const config = {
+    headers: { Authorization: token },
+  };
+
+  const commentResponse = await axios.post(
+    `${baseUrl}/${blog.id}/comments`,
+    commentPayload,
+    config
+  );
+
+  return commentResponse;
+};
+
 const likeBlog = async (blog) => {
   const config = {
     headers: { Authorization: token },
@@ -64,6 +80,7 @@ const exportedObject = {
   postNewBlog,
   likeBlog,
   deleteBlog,
+  commentBlog
 };
 
 export default exportedObject;

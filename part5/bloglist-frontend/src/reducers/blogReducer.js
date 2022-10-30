@@ -40,4 +40,10 @@ export const likeBlog = (blog) => {
   };
 };
 
+export const commentBlog = (blog) => {
+  return async (dispatch) => {
+    dispatch(updateBlog(blog));
+  };
+};
+
 export default blogSlice.reducer;

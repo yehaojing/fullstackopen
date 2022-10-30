@@ -1,12 +1,14 @@
 import Button from "./Button";
 
+import { useState } from "react";
 import blogService from "../services/blogs";
 import { showNotification } from "../reducers/notificationReducer";
-import { removeBlog, likeBlog } from "../reducers/blogReducer";
+import { removeBlog, likeBlog, commentBlog } from "../reducers/blogReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 
 const Blog = () => {
+  const [comment, setComment] = useState("");
 
   const dispatch = useDispatch();
   const id = useParams().id;
@@ -21,6 +23,15 @@ const Blog = () => {
     dispatch(likeBlog(response.data));
   };
 
+  const commentBlogHandler = async (event) => {
+    event.preventDefault();
+    if (comment){
+      const response = await blogService.commentBlog(blog, comment);
+      dispatch(commentBlog(response.data));
+      setComment("");
+    }
+  };
+
   const deleteBlogHandler = (event) => {
     event.preventDefault();
     if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
@@ -32,6 +43,8 @@ const Blog = () => {
         });
     }
   };
+
+
 
   return (
     <div className="blog_box">
@@ -48,9 +61,19 @@ const Blog = () => {
       </div>
       <div>
         <h2>Comments</h2>
-        <lu>
+        <form onSubmit={commentBlogHandler}>
+          <div>
+            <input
+              aria-label="Comment"
+              value={comment}
+              onChange={({ target }) => setComment(target.value)}
+            />
+            <button type="submit">Create</button>
+          </div>
+        </form>
+        <ul>
           {blog.comments.map((comment, idx) => (<li key={idx}>{comment}</li>))}
-        </lu>
+        </ul>
       </div>
       <div>
         <h2>Delete Blog</h2>
