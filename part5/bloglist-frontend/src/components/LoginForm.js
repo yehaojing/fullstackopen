@@ -8,6 +8,8 @@ import { showNotification } from "../reducers/notificationReducer";
 import { initialiseBlogs } from "../reducers/blogReducer";
 import { initialiseUsers } from "../reducers/usersReducer";
 
+import { TextField, Button } from "@mui/material";
+
 const LoginForm = () => {
   const dispatch = useDispatch();
 
@@ -26,7 +28,7 @@ const LoginForm = () => {
       dispatch(initialiseBlogs());
       dispatch(initialiseUsers());
     } catch (exception) {
-      dispatch(showNotification("Wrong username or password"));
+      dispatch(showNotification("Wrong username or password", "error"));
       blogService.setToken("");
       dispatch(setLogin(null));
     }
@@ -43,25 +45,27 @@ const LoginForm = () => {
     <div>
       <h1>Login</h1>
       <form onSubmit={login}>
+        Username
         <div>
-          Username{" "}
-          <input
+          <TextField
+            style={{ paddingBottom: 20 }}
             type="text"
             value={username}
             name="Username"
             onChange={({ target }) => setUsername(target.value)}
           />
         </div>
+        Password
         <div>
-          Password{" "}
-          <input
+          <TextField
+            style={{ paddingBottom: 20 }}
             type="password"
             value={password}
             name="Password"
             onChange={({ target }) => setPassword(target.value)}
           />
         </div>
-        <button type="submit">login</button>
+        <Button variant="contained" type="submit">login</Button>
       </form>
     </div>
   );

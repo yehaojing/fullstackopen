@@ -17,11 +17,11 @@ export const { setNotification, removeNotification } =
   notificationSlice.actions;
 
 let timeId = 0;
-export const showNotification = (message, time = 5000) => {
+export const showNotification = (message, severity, time = 5000) => {
   return async (dispatch) => {
     clearTimeout(timeId);
     timeId = setTimeout(() => dispatch(removeNotification()), time);
-    dispatch(setNotification(message));
+    dispatch(setNotification({ message, severity }));
   };
 };
 

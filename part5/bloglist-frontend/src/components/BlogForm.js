@@ -4,6 +4,7 @@ import Togglable from "./Togglable";
 import { showNotification } from "../reducers/notificationReducer";
 import { addBlog } from "../reducers/blogReducer";
 import { useDispatch } from "react-redux";
+import { TextField, Button } from "@mui/material";
 
 import blogService from "../services/blogs";
 import { initialiseUsers } from "../reducers/usersReducer";
@@ -33,50 +34,56 @@ const BlogForm = () => {
         newBlog.id = resp.id;
         dispatch(addBlog(newBlog));
         dispatch(showNotification(
-          `a new blog "${newBlog.title}" by ${newBlog.author} added`
+          `a new blog "${newBlog.title}" by ${newBlog.author} added`, "success"
         ));
         dispatch(initialiseUsers());
       })
       .catch((error) => {
-        dispatch(showNotification(`${error}`));
+        dispatch(showNotification(`${error}`, "error"));
       });
   };
 
   return (
-    <Togglable buttonLabel="new blog" ref={blogFormRef}>
-      <div>
-        <h1>Add new blog</h1>
-        <form onSubmit={createBlogHandler}>
-          <div>
-            Title{" "}
-            <input
-              aria-label="Title"
-              value={newTitle}
-              onChange={({ target }) => setNewTitle(target.value)}
-            />
-          </div>
-          <div>
-            Author{" "}
-            <input
-              aria-label="Author"
-              value={newAuthor}
-              onChange={({ target }) => setNewAuthor(target.value)}
-            />
-          </div>
-          <div>
-            URL{" "}
-            <input
-              aria-label="URL"
-              value={newUrl}
-              onChange={({ target }) => setNewUrl(target.value)}
-            />
-          </div>
-          <div>
-            <button type="submit">Create</button>
-          </div>
-        </form>
-      </div>
-    </Togglable>
+    <div style={{ paddingBottom: 20 }}>
+      <Togglable buttonLabel="Create a New Blog" ref={blogFormRef}>
+        <div>
+          <h1>Add new blog</h1>
+          <form onSubmit={createBlogHandler}>
+            <div>
+              <TextField
+                label="Title"
+                aria-label="Title"
+                value={newTitle}
+                style={{ marginBottom: 10 }}
+                onChange={({ target }) => setNewTitle(target.value)}
+              />
+            </div>
+            <div>
+              <TextField
+                label="Author"
+                aria-label="Author"
+                value={newAuthor}
+                style={{ marginBottom: 10 }}
+                onChange={({ target }) => setNewAuthor(target.value)}
+              />
+            </div>
+            <div>
+              <TextField
+                label="URL"
+                aria-label="URL"
+                value={newUrl}
+                style={{ marginBottom: 10 }}
+                onChange={({ target }) => setNewUrl(target.value)}
+              />
+            </div>
+            <div>
+              <Button style={{ marginBottom: 10 }} variant="contained" type="submit">Create</Button>
+            </div>
+          </form>
+        </div>
+      </Togglable>
+    </div>
+
   );
 };
 

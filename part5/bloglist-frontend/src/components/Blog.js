@@ -1,11 +1,11 @@
-import Button from "./Button";
-
 import { useState } from "react";
 import blogService from "../services/blogs";
 import { showNotification } from "../reducers/notificationReducer";
 import { removeBlog, likeBlog, commentBlog } from "../reducers/blogReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
+
+import { Typography, Button } from "@mui/material";
 
 const Blog = () => {
   const [comment, setComment] = useState("");
@@ -39,7 +39,7 @@ const Blog = () => {
         .deleteBlog(blog)
         .then(() => dispatch(removeBlog(blog)))
         .catch((error) => {
-          dispatch(showNotification(`${error}`));
+          dispatch(showNotification(`${error}`, "error"));
         });
     }
   };
@@ -47,41 +47,52 @@ const Blog = () => {
 
 
   return (
-    <div className="blog_box">
-      <h1>{blog.title} by {blog.author} </h1>
-      <div className="url">
-        URL: <Link>{blog.url}</Link>
-      </div>
-      <div className="likes">
-        Likes: {blog.likes ? blog.likes : 0}{" "}
-        <Button className="likeButton" text="Like" handler={likeBlogHandler} />
-      </div>
-      <div>
-        added by {blog.user.name}
-      </div>
-      <div>
-        <h2>Comments</h2>
-        <form onSubmit={commentBlogHandler}>
-          <div>
-            <input
-              aria-label="Comment"
-              value={comment}
-              onChange={({ target }) => setComment(target.value)}
-            />
-            <button type="submit">Create</button>
+    <>
+      <div className="blog_box">
+        <h1>{blog.title} by {blog.author} </h1>
+        <div>
+          <Typography>
+            added by {blog.user.name}
+          </Typography>
+        </div>
+        <div className="url">
+          <Typography>
+            URL: <Link>{blog.url}</Link>
+          </Typography>
+        </div>
+
+        <div>
+          <h2>Comments</h2>
+          <div className="likes">
+            <Typography>
+              Likes: {blog.likes ? blog.likes : 0}{" "}
+              <Button variant="contained" label="Like" onClick={likeBlogHandler}>Like</Button>
+            </Typography>
           </div>
-        </form>
-        <ul>
-          {blog.comments.map((comment, idx) => (<li key={idx}>{comment}</li>))}
-        </ul>
+          <form style={{ marginTop:10 }} onSubmit={commentBlogHandler}>
+            <div>
+              <input
+                aria-label="Comment"
+                value={comment}
+                onChange={({ target }) => setComment(target.value)}
+              />
+              <Button type="submit">comment</Button>
+            </div>
+          </form>
+          <ul>
+            {blog.comments.map((comment, idx) => (<li key={idx}>{comment}</li>))}
+          </ul>
+        </div>
+        <div>
+          <h2>Delete Blog</h2>
+        </div>
+        <div>
+          <Button variant="contained" onClick={deleteBlogHandler}>Delete Blog</Button>
+        </div>
       </div>
-      <div>
-        <h2>Delete Blog</h2>
-      </div>
-      <div>
-        <Button text="Delete Blog" handler={deleteBlogHandler} />
-      </div>
-    </div>
+    </>
+
+
   );
 };
 

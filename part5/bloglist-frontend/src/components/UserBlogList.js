@@ -12,11 +12,17 @@ const UserBlogList = ({ user }) => {
   }
 
   return (
-    <ul>
-      {user.blogs.map(blog => {
-        return (<li key={blog.id}>{blog.title}</li>);
-      })}
-    </ul>
+    <>
+      <h1>
+        {user.name}
+      </h1>
+      <ul>
+        {user.blogs.map(blog => {
+          return (<li key={blog.id}>{blog.title}</li>);
+        })}
+      </ul>
+    </>
+
   );
 };
 

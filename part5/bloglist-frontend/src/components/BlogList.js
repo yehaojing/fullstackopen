@@ -1,3 +1,4 @@
+import { Paper, TableContainer, Table, TableBody, TableRow, TableCell  } from "@mui/material";
 import { useSelector } from "react-redux";
 import {
   Link
@@ -10,15 +11,26 @@ const BlogList = () => {
   );
 
   return (
-    <>
-      {blogs
-        .sort((blogA, blogB) => blogB.likes - blogA.likes)
-        .map((blog) => (
-          <div className="blog_box" key={blog.id}>
-            <Link to={`/blogs/${blog.id}`}>{blog.title} by {blog.author}</Link>
-          </div>
-        ))}
-    </>
+    <TableContainer component={Paper}>
+      <Table>
+        <TableBody>
+          {blogs
+            .sort((blogA, blogB) => blogB.likes - blogA.likes)
+            .map((blog) => (
+              <TableRow key={blog.id}>
+                <TableCell>
+                  <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
+                </TableCell>
+                <TableCell>
+                  {blog.author}
+                </TableCell>
+              </TableRow>
+            ))}
+        </TableBody>
+      </Table>
+
+    </TableContainer>
+
   );
 };
 
