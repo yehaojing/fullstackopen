@@ -2,13 +2,9 @@ import { useEffect } from "react";
 import BlogNavBar from "./components/BlogNavBar";
 import MainView from "./components/MainView";
 import LoginForm from "./components/LoginForm";
-import BlogForm from "./components/BlogForm";
 import Notification from "./components/Notification";
 
 import { Container } from "@mui/material";
-
-
-
 import { initialiseBlogs } from "./reducers/blogReducer";
 import { setLogin } from "./reducers/loginReducer";
 import { initialiseUsers } from "./reducers/usersReducer";
@@ -47,9 +43,6 @@ const App = () => {
           <>
             <BlogNavBar />
             <h1>Blogs</h1>
-            <div>
-              <BlogForm/>
-            </div>
             <MainView/>
           </>
         )}

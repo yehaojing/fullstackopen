@@ -3,12 +3,13 @@ import blogService from "../services/blogs";
 import { showNotification } from "../reducers/notificationReducer";
 import { removeBlog, likeBlog, commentBlog } from "../reducers/blogReducer";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 import { Typography, Button } from "@mui/material";
 
 const Blog = () => {
   const [comment, setComment] = useState("");
+  const navigate = useNavigate();
 
   const dispatch = useDispatch();
   const id = useParams().id;
@@ -37,7 +38,10 @@ const Blog = () => {
     if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
       blogService
         .deleteBlog(blog)
-        .then(() => dispatch(removeBlog(blog)))
+        .then(() => {
+          dispatch(removeBlog(blog));
+          navigate("/");
+        })
         .catch((error) => {
           dispatch(showNotification(`${error}`, "error"));
         });
@@ -49,7 +53,7 @@ const Blog = () => {
   return (
     <>
       <div className="blog_box">
-        <h1>{blog.title} by {blog.author} </h1>
+        <Typography variant="h1">{blog.title} by {blog.author} </Typography>
         <div>
           <Typography>
             added by {blog.user.name}
@@ -62,7 +66,7 @@ const Blog = () => {
         </div>
 
         <div>
-          <h2>Comments</h2>
+          <Typography variant="h3">Comments</Typography>
           <div className="likes">
             <Typography>
               Likes: {blog.likes ? blog.likes : 0}{" "}
@@ -84,7 +88,7 @@ const Blog = () => {
           </ul>
         </div>
         <div>
-          <h2>Delete Blog</h2>
+          <Typography variant="h3">Delete Blog</Typography>
         </div>
         <div>
           <Button variant="contained" onClick={deleteBlogHandler}>Delete Blog</Button>

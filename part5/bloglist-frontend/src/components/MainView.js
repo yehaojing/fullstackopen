@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import BlogList from "./BlogList";
 import UserSummaries from "./UserSummary";
 import UserBlogList from "./UserBlogList";
+import BlogForm from "./BlogForm";
 import Blog from "./Blog";
 
 const Menu = () => {
@@ -26,6 +27,7 @@ const Menu = () => {
         <Route path="/users" element={<UserSummaries />} />
         <Route path="/users/:id" element={<UserBlogList user={user}/>} />
         <Route path="/blogs/:id" element={<Blog />} />
+        <Route path="/create" element={<BlogForm />} />
       </Routes>
     </>
   );

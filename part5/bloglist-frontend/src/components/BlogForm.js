@@ -1,10 +1,9 @@
 import { useState, useRef } from "react";
-import Togglable from "./Togglable";
 
 import { showNotification } from "../reducers/notificationReducer";
 import { addBlog } from "../reducers/blogReducer";
 import { useDispatch } from "react-redux";
-import { TextField, Button } from "@mui/material";
+import { TextField, Button, Typography } from "@mui/material";
 
 import blogService from "../services/blogs";
 import { initialiseUsers } from "../reducers/usersReducer";
@@ -31,10 +30,9 @@ const BlogForm = () => {
     blogService
       .postNewBlog(newBlog)
       .then((resp) => {
-        newBlog.id = resp.id;
-        dispatch(addBlog(newBlog));
+        dispatch(addBlog(resp));
         dispatch(showNotification(
-          `a new blog "${newBlog.title}" by ${newBlog.author} added`, "success"
+          `a new blog "${resp.title}" by ${resp.author} added`, "success"
         ));
         dispatch(initialiseUsers());
       })
@@ -44,46 +42,41 @@ const BlogForm = () => {
   };
 
   return (
-    <div style={{ paddingBottom: 20 }}>
-      <Togglable buttonLabel="Create a New Blog" ref={blogFormRef}>
+    <div>
+      <Typography variant='h2'>Create a Blog</Typography>
+      <form onSubmit={createBlogHandler}>
         <div>
-          <h1>Add new blog</h1>
-          <form onSubmit={createBlogHandler}>
-            <div>
-              <TextField
-                label="Title"
-                aria-label="Title"
-                value={newTitle}
-                style={{ marginBottom: 10 }}
-                onChange={({ target }) => setNewTitle(target.value)}
-              />
-            </div>
-            <div>
-              <TextField
-                label="Author"
-                aria-label="Author"
-                value={newAuthor}
-                style={{ marginBottom: 10 }}
-                onChange={({ target }) => setNewAuthor(target.value)}
-              />
-            </div>
-            <div>
-              <TextField
-                label="URL"
-                aria-label="URL"
-                value={newUrl}
-                style={{ marginBottom: 10 }}
-                onChange={({ target }) => setNewUrl(target.value)}
-              />
-            </div>
-            <div>
-              <Button style={{ marginBottom: 10 }} variant="contained" type="submit">Create</Button>
-            </div>
-          </form>
+          <TextField
+            label="Title"
+            aria-label="Title"
+            value={newTitle}
+            style={{ marginBottom: 10 }}
+            onChange={({ target }) => setNewTitle(target.value)}
+          />
         </div>
-      </Togglable>
+        <div>
+          <TextField
+            label="Author"
+            aria-label="Author"
+            value={newAuthor}
+            style={{ marginBottom: 10 }}
+            onChange={({ target }) => setNewAuthor(target.value)}
+          />
+        </div>
+        <div>
+          <TextField
+            label="URL"
+            aria-label="URL"
+            value={newUrl}
+            style={{ marginBottom: 10 }}
+            onChange={({ target }) => setNewUrl(target.value)}
+          />
+        </div>
+        <div>
+          <Button style={{ marginBottom: 10 }} variant="contained" type="submit">Create</Button>
+        </div>
+      </form>
     </div>
-
   );
 };
 

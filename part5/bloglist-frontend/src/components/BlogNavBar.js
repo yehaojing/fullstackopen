@@ -18,11 +18,14 @@ const BlogNavBar = () => {
   return (
     <AppBar>
       <Toolbar>
-        <Button color ="inherit" component={Link} to="/">
+        <Button style={{ textTransform: "none" }} color ="inherit" component={Link} to="/">
           Blogs
         </Button>
-        <Button color ="inherit" component={Link} to="/users">
+        <Button style={{ textTransform: "none" }} color ="inherit" component={Link} to="/users">
           Users
+        </Button>
+        <Button style={{ textTransform: "none" }} color ="inherit" component={Link} to="/create">
+          Create a Blog
         </Button>
         <Typography sx={{ marginLeft: "auto" }}>
               Logged in: {login.name}
@@ -30,8 +33,6 @@ const BlogNavBar = () => {
         <Button color="inherit" style={{ marginLeft: 20 }} variant="outlined" onClick={logoutHandler} >
           Logout
         </Button>
-
-
       </Toolbar>
     </AppBar>
   );
