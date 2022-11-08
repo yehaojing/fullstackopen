@@ -45,17 +45,17 @@ const resolvers = {
   Query: {
     authorCount: async () => Author.collection.countDocuments(),
     bookCount: async () => Book.collection.countDocuments(),
-    // allBooks: (root, args) => {
-    //   if (!args.author && !args.genre) {
-    //     console.log("foobar");
-    //     return books;
-    //   }
-    //   return books.filter((book) => {
-    //     const authorFilt = args.author ? book.author === args.author : true;
-    //     const genreFilt = args.genre ? book.genres.includes(args.genre) : true;
-    //     return authorFilt && genreFilt;
-    //   });
-    // },
+    allBooks: async (root, args) => {
+      const query = (!args.author && !args.genre) ? {} : { $and: [] };
+      if (args.author) {
+        const author = await Author.findOne({ name: args.author }, { _id: 1 });
+        query.$and.push({ author: author._id });
+      }
+      if (args.genre) {
+        query.$and.push({ genres: { $in: args.genre } });
+      }
+      return await Book.find(query).populate("author");
+    },
     allAuthors: async () => Author.find({})
   },
   // Author: {
