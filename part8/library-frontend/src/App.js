@@ -15,7 +15,7 @@ const App = () => {
     setToken(null);
     localStorage.clear();
     client.resetStore();
-    setPage("authors")
+    setPage("authors");
   };
 
   return (
@@ -28,7 +28,6 @@ const App = () => {
             <button onClick={() => setPage("add")}>add book</button>
             <button onClick={logout}>logout</button>
           </>
-
         ) : (
           <button onClick={() => setPage("login")}>login</button>
         )}
@@ -38,7 +37,7 @@ const App = () => {
       <SetBirthyear show={page === "authors"} />
       <Books show={page === "books"} />
       <NewBook show={page === "add"} />
-      <Login show={page === "login"} setToken={setToken} setPage={setPage}/>
+      <Login show={page === "login"} setToken={setToken} setPage={setPage} />
     </div>
   );
 };
