@@ -45,7 +45,7 @@ const SetBirthyear = (props) => {
             {
             authors.loading ? 
               null : 
-              authors.data.allAuthors.map((author) => <option value={author.name}>{author.name}</option>)
+              authors.data.allAuthors.map((author) => <option value={author.name} key={author.name}>{author.name}</option>)
             }
           </select>
         </div>
