@@ -1,18 +1,18 @@
 import { useEffect, useState } from "react";
 import { useMutation } from "@apollo/client";
-import { LOGIN } from "../queries";
+import { LOGIN, ME } from "../queries";
 
 const Login = ({ show, setToken, setPage }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const [ login, result ] = useMutation(LOGIN);
+  const [ login, result ] = useMutation(LOGIN, { refetchQueries: [ { query: ME } ] } );
 
   useEffect(() => {
     if ( result.data ) {
       const token = result.data.login.value
-      setToken(token)
       localStorage.setItem('library-user-token', token)
+      window.location.reload()
     }
   }, [result.data])
 
@@ -29,9 +29,6 @@ const Login = ({ show, setToken, setPage }) => {
         password,
       },
     });
-
-    setPage("authors")
-
     setUsername("");
     setPassword("");
   };

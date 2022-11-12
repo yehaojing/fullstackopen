@@ -81,11 +81,11 @@ const resolvers = {
       return context.currentUser;
     },
   },
-  // Author: {
-  //   bookCount: (root) => {
-  //     return books.filter((book) => book.author === root.name).length;
-  //   },
-  // },
+  Author: {
+    bookCount: async (root) => {
+      return (await Book.find( { author: root._id } )).length;
+    },
+  },
   // Book: {
   //   author: (root) => {
   //     return authors.find((author) => author.name === root.author);
@@ -146,6 +146,7 @@ const resolvers = {
 
       const userForToken = {
         username: user.username,
+        favouriteGenre: user.favouriteGenre,
         id: user._id,
       };
 

@@ -5,7 +5,6 @@ import { ALL_BOOKS } from "../queries";
 const Books = (props) => {
   const result = useQuery(ALL_BOOKS);
   const [genreFilt, setGenreFilt] = useState(null)
-  console.log(genreFilt)
 
   if (!props.show) {
     return null;
