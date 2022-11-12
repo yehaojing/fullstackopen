@@ -1,12 +1,22 @@
-import { useQuery } from "@apollo/client";
-import { useState } from "react";
+import { useQuery, useLazyQuery } from "@apollo/client";
+import { useState, useEffect } from "react";
 import { BOOKS_BY_GENRE, ALL_GENRES } from "../queries";
 
 const Books = (props) => {
   const [genreFilt, setGenreFilt] = useState(null)
-  const result = useQuery(BOOKS_BY_GENRE, {
-    variables: { genre: genreFilt }
+  const [getBooksByGenre, booksResult] = useLazyQuery(BOOKS_BY_GENRE, {
+    fetchPolicy: "no-cache",
   });
+
+  useEffect(() => {
+    getBooksByGenre({ variables: { genre: genreFilt }})
+  }, [])
+
+  const handlerGenreButton = (genre) => {
+    setGenreFilt(genre)
+    console.log(genreFilt)
+    getBooksByGenre({ variables: { genre: genre }})
+  }
 
   const genres = useQuery(ALL_GENRES).data?.allBooks?.map((book) => book.genres).flat(1)
   const setGenres = [...new Set(genres)]
@@ -15,11 +25,11 @@ const Books = (props) => {
     return null;
   }
 
-  if (result.loading) {
+  if (booksResult.loading) {
     return <div>loading...</div>;
   }
 
-  const books = result.data.allBooks;
+  const books = booksResult.data.allBooks;
 
   return (
     <div>
@@ -41,8 +51,8 @@ const Books = (props) => {
         </tbody>
       </table>
       <div>
-        {setGenres.map(genre => <button key={genre} onClick={() => setGenreFilt(genre)}>{genre}</button>)}
-        <button onClick={() => setGenreFilt(null)}>All Genres</button>
+        {setGenres.map(genre => <button key={genre} onClick={() => handlerGenreButton(genre)}>{genre}</button>)}
+        <button onClick={() => handlerGenreButton(null)}>All Genres</button>
       </div>
     </div>
   );
