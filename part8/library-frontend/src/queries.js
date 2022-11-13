@@ -79,3 +79,22 @@ export const ALL_GENRES = gql`
       genres
     }
   }`
+
+const BOOK_DETAILS = gql`
+  fragment bookDetails on Book {
+    title
+    author {
+      name
+    }
+    published
+    id
+    genres
+  }`
+
+export const BOOK_ADDED = gql`
+  subscription {
+    bookAdded {
+      ...bookDetails
+    }
+  }
+  ${BOOK_DETAILS}`

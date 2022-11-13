@@ -4,8 +4,9 @@ import Books from "./components/Books";
 import Login from "./components/Login";
 import NewBook from "./components/NewBook";
 import SetBirthyear from "./components/SetBirthyear";
-import { useApolloClient } from "@apollo/client";
+import { useSubscription, useApolloClient } from "@apollo/client";
 import Recommend from "./components/Recommend";
+import { BOOK_ADDED } from "./queries";
 
 const App = () => {
   const [page, setPage] = useState("authors");
@@ -25,6 +26,13 @@ const App = () => {
       setToken(userFromStorage);
     }
   }, [page]);
+
+  useSubscription(BOOK_ADDED, {
+    onData: ({ data }) => {
+      window.alert(`Book added: ${data.data.bookAdded.title} by ${data.data.bookAdded.author.name} in ${data.data.bookAdded.published}`)
+    }
+  })
+
 
   return (
     <div>
