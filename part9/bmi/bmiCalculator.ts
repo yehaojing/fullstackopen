@@ -1,4 +1,4 @@
-const calculateBmi = (height: number, weight: number): string => {
+export const calculateBmi = (height: number, weight: number): string => {
   if (!height || !weight) throw new Error("No height/weight provided");
   if (height < 0 || weight < 0) throw new Error("Negative value(s) provided");
 
