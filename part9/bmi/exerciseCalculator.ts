@@ -25,30 +25,22 @@ const calculateExercise = (
   if (target < 0 || exerciseHours.some((hour) => hour < 0))
     throw new Error("Negative value(s) provided");
 
-  try {
-    const periodLength = exerciseHours.length;
-    const trainingDays = exerciseHours.filter((day) => day > 0).length;
-    const average = exerciseHours.reduce((a, b) => a + b) / periodLength;
-    const success = average > target;
+  const periodLength = exerciseHours.length;
+  const trainingDays = exerciseHours.filter((day) => day > 0).length;
+  const average = exerciseHours.reduce((a, b) => a + b) / periodLength;
+  const success = average > target;
 
-    const { rating, ratingDescription } = calculateRating(average, target);
+  const { rating, ratingDescription } = calculateRating(average, target);
 
-    return {
-      periodLength: periodLength,
-      trainingDays: trainingDays,
-      success: success,
-      target: target,
-      average: average,
-      rating: rating,
-      ratingDescription: ratingDescription,
-    };
-  } catch (error: unknown) {
-    let errorMessage = "Something bad happened.";
-    if (error instanceof Error) {
-      errorMessage += " Error: " + error.message;
-    }
-    console.log(errorMessage);
-  }
+  return {
+    periodLength: periodLength,
+    trainingDays: trainingDays,
+    success: success,
+    target: target,
+    average: average,
+    rating: rating,
+    ratingDescription: ratingDescription,
+  };
 };
 
 const calculateRating = (average: number, target: number): exerciseRating => {
@@ -72,4 +64,12 @@ const exerciseHours: Array<number> = process.argv
   .slice(3)
   .map((hour) => Number(hour));
 
-console.log(calculateExercise(exerciseHours, target));
+try {
+  console.log(calculateExercise(exerciseHours, target));
+} catch (error: unknown) {
+  let errorMessage = "Something bad happened.";
+  if (error instanceof Error) {
+    errorMessage += " Error: " + error.message;
+  }
+  console.log(errorMessage);
+}
