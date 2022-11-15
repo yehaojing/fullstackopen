@@ -1,31 +1,50 @@
-import { gql } from '@apollo/client'
+import { gql } from "@apollo/client";
+
+const BOOK_DETAILS = gql`
+  fragment bookDetails on Book {
+    title
+    author {
+      name
+    }
+    published
+    id
+    genres
+  }
+`;
 
 export const ALL_AUTHORS = gql`
   query {
     allAuthors {
       name
       born
-      id,
+      id
       bookCount
     }
-  }`
+  }
+`;
 
 export const ALL_BOOKS = gql`
-  query {
-    allBooks {
-      title
-      published
-      id
-      genres
-      author {
-        name
-      }
+  query allBooks($author: String, $genre: String) {
+    allBooks(author: $author, genre: $genre) {
+      ...bookDetails
     }
-  }`
+  }
+  ${BOOK_DETAILS}
+`;
 
 export const ADD_BOOK = gql`
-  mutation AddBook($title: String!, $published: Int!, $author: String!, $genres: [String!]!) {
-    addBook(title: $title, published: $published, author: $author, genres: $genres) {
+  mutation AddBook(
+    $title: String!
+    $published: Int!
+    $author: String!
+    $genres: [String!]!
+  ) {
+    addBook(
+      title: $title
+      published: $published
+      author: $author
+      genres: $genres
+    ) {
       title
       author {
         name
@@ -34,7 +53,8 @@ export const ADD_BOOK = gql`
       id
       genres
     }
-  }`
+  }
+`;
 
 export const EDIT_AUTHOR = gql`
   mutation EditAuthor($name: String!, $setBornTo: Int!) {
@@ -43,14 +63,16 @@ export const EDIT_AUTHOR = gql`
       born
       id
     }
-  }`
+  }
+`;
 
 export const LOGIN = gql`
   mutation Mutation($username: String!, $password: String!) {
     login(username: $username, password: $password) {
       value
     }
-  }`
+  }
+`;
 
 export const BOOKS_BY_GENRE = gql`
   query AllBooks($genre: String) {
@@ -62,7 +84,8 @@ export const BOOKS_BY_GENRE = gql`
       genres
       published
     }
-  }`
+  }
+`;
 
 export const ME = gql`
   query Me {
@@ -71,25 +94,16 @@ export const ME = gql`
       id
       username
     }
-  }`
+  }
+`;
 
 export const ALL_GENRES = gql`
   query AllBooks {
     allBooks {
       genres
     }
-  }`
-
-const BOOK_DETAILS = gql`
-  fragment bookDetails on Book {
-    title
-    author {
-      name
-    }
-    published
-    id
-    genres
-  }`
+  }
+`;
 
 export const BOOK_ADDED = gql`
   subscription {
@@ -97,4 +111,5 @@ export const BOOK_ADDED = gql`
       ...bookDetails
     }
   }
-  ${BOOK_DETAILS}`
+  ${BOOK_DETAILS}
+`;
