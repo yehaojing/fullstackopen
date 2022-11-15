@@ -5,7 +5,15 @@ const express = require("express");
 const http = require("http");
 const config = require("./utils/config");
 const mongoose = require("mongoose");
-mongoose.connect(config.MONGODB_URI);
+mongoose
+  .connect(config.MONGODB_URI)
+  .then(() => {
+    console.log("connected to MongoDB");
+  })
+  .catch((error) => {
+    console.log("error connection to MongoDB:", error.message);
+  });
+mongoose.set("debug", true);
 const jwt = require("jsonwebtoken");
 const JWT_SECRET = "NEED_HERE_A_SECRET_KEY";
 const typeDefs = require("./schema");

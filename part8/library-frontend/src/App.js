@@ -32,7 +32,6 @@ const App = () => {
       set.map((p) => p.id).includes(object.id);
 
     const dataInStore = client.readQuery({ query: ALL_BOOKS });
-    console.log(dataInStore)
     if (!includedIn(dataInStore.allBooks, addedBook)) {
       client.writeQuery({
         query: ALL_BOOKS,

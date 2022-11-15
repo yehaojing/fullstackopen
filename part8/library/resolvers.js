@@ -30,16 +30,16 @@ const resolvers = {
       return context.currentUser;
     },
   },
-  Author: {
-    bookCount: async (root) => {
-      return (await Book.find({ author: root._id })).length;
-    },
-  },
-  // Book: {
-  //   author: (root) => {
-  //     return authors.find((author) => author.name === root.author);
+  // Author: {
+  //   bookCount: async (root) => {
+  //     return (await Book.find({ author: root._id })).length;
   //   },
   // },
+  // // Book: {
+  // //   author: (root) => {
+  // //     return authors.find((author) => author.name === root.author);
+  // //   },
+  // // },
   Mutation: {
     addBook: async (root, args, context) => {
       const currentUser = context.currentUser;
@@ -54,6 +54,11 @@ const resolvers = {
         const book = await (
           await new Book({ ...args, author: author._id }).save()
         ).populate("author");
+
+        const bookCount = await Book.find({ author: author.id }).countDocuments();
+
+        await Author.findOneAndUpdate({ name: author.name }, { bookCount: bookCount });
+
         pubsub.publish("BOOK_ADDED", { bookAdded: book });
         return book;
       } catch (error) {
