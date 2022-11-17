@@ -59,7 +59,7 @@ const calculateRating = (average: number, target: number): exerciseRating => {
   }
 };
 
-const target: number = Number(process.argv[2]);
+const target = Number(process.argv[2]);
 const exerciseHours: Array<number> = process.argv
   .slice(3)
   .map((hour) => Number(hour));
