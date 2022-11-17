@@ -13,7 +13,7 @@ interface exerciseRating {
   ratingDescription: string;
 }
 
-const calculateExercise = (
+export const calculateExercise = (
   exerciseHours: Array<number>,
   target: number
 ): exerciseResults => {
