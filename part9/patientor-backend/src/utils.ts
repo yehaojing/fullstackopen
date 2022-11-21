@@ -1,4 +1,4 @@
-import { NewPatient, Gender } from "./types";
+import { NewPatient, Gender, Entry } from "./types";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const toNewPatient = (object: any): NewPatient => {
@@ -8,6 +8,7 @@ export const toNewPatient = (object: any): NewPatient => {
     ssn: parseGenericStringField(object.ssn),
     gender: parseGender(object.gender),
     occupation: parseGenericStringField(object.occupation),
+    entries: parseArray(object.entries)
   };
 
   return newEntry;
@@ -25,6 +26,10 @@ const isDate = (date: string): boolean => {
 const isGender = (param: any): param is Gender => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   return Object.values(Gender).includes(param);
+};
+
+const isArray = (array: unknown): array is Entry[] => {
+  return array instanceof Array;
 };
 
 const parseGenericStringField = (field: unknown): string => {
@@ -46,4 +51,11 @@ const parseGender = (gender: unknown): Gender => {
     throw new Error("Incorrect or missing gender: " + gender);
   }
   return gender;
+};
+
+const parseArray = (array: unknown): Entry[] => {
+  if (!array || !isArray(array)) {
+    throw new Error("Incorrect or missing entries: " + array);
+  }
+  return array;
 };

@@ -3,7 +3,7 @@ import patientsData from '../data/patients.json';
 
 import { SensitivePatient, NewPatient, Patient } from '../types';
 
-const patients: Array<SensitivePatient> = patientsData as Array<SensitivePatient>;
+const patients: Array<Patient> = patientsData as Array<Patient>;
 
 const getEntries = (): Array<SensitivePatient> => {
   return patients.map(({id, name, dateOfBirth, gender, occupation}) => ({
@@ -29,7 +29,14 @@ const addPatient = (
   return newPatient;
 };
 
+const getPatient = (
+  findId: string
+): Patient => {
+  return patients.find(({id}) => id === findId) as Patient;
+};
+
 export default {
   getEntries,
-  addPatient
+  addPatient,
+  getPatient
 };
