@@ -1,19 +1,14 @@
-import { ContentProps } from "../types";
+import { ContentProps, CoursePart } from "../types";
+import { Part } from "./Part";
 
 export const Content = (props: ContentProps): JSX.Element => {
-  const courseParts = props.courseParts;
+  const courseParts: CoursePart[] = props.courseParts;
 
   return (
     <>
-      <p>
-        {courseParts[0].name} {courseParts[0].exerciseCount}
-      </p>
-      <p>
-        {courseParts[1].name} {courseParts[1].exerciseCount}
-      </p>
-      <p>
-        {courseParts[2].name} {courseParts[2].exerciseCount}
-      </p>
+      {courseParts.map((coursePart: CoursePart) => (
+        <Part course={coursePart} key={coursePart.name}/>
+      ))}
     </>
-  );
+  )
 };
