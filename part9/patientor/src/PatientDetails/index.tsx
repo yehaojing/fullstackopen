@@ -1,5 +1,6 @@
 import React from "react";
 import { useStateValue } from "../state";
+import { setPatientDetails } from "../state";
 import { apiBaseUrl } from "../constants";
 import axios from "axios";
 import { Patient } from "../types";
@@ -21,10 +22,7 @@ const PatientDetails = () => {
           `${apiBaseUrl}/patients/${id}`
         );
 
-        dispatch({
-          type: "SET_PATIENT_DETAILS",
-          payload: patientDetails,
-        });
+        dispatch(setPatientDetails(patientDetails));
       } catch (e) {
         console.error(e);
       }

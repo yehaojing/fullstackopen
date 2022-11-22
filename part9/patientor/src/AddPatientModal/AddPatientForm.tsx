@@ -30,6 +30,7 @@ export const AddPatientForm = ({ onSubmit, onCancel }: Props) => {
         ssn: "",
         dateOfBirth: "",
         occupation: "",
+        entries: [],
         gender: Gender.Other,
       }}
       onSubmit={onSubmit}
@@ -76,6 +77,12 @@ export const AddPatientForm = ({ onSubmit, onCancel }: Props) => {
               label="Occupation"
               placeholder="Occupation"
               name="occupation"
+              component={TextField}
+            />
+            <Field
+              label="Entries"
+              placeholder="Entries"
+              name="Entries"
               component={TextField}
             />
             <SelectField label="Gender" name="gender" options={genderOptions} />
