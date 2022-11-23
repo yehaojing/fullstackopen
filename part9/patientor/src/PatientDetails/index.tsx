@@ -21,6 +21,7 @@ const PatientDetails = () => {
           // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
           `${apiBaseUrl}/patients/${id}`
         );
+        console.log(patientDetails);
 
         dispatch(setPatientDetails(patientDetails));
       } catch (e) {
@@ -43,6 +44,8 @@ const PatientDetails = () => {
     } else return null;
   };
 
+  console.log(patient, "this is");
+
   return (
     <>
       <h2>{patient?.name} {resolvePatientGenderIcon()}</h2>
@@ -52,6 +55,29 @@ const PatientDetails = () => {
         </p>
         <p>
           Occupation: {patient?.occupation}
+        </p>
+        <h3>
+          Entries
+        </h3>
+        <p>
+          {patient?.entries.map((entry, idx) => {
+            return (
+              <>
+                <div key={idx}>{entry.date} <i>{entry.description}</i></div>
+                <ul>
+                  {entry.diagnosisCodes?.map((d, idx) => {
+                    return (
+                      <li key={idx}>
+                        {d}
+                      </li>
+                    );
+                  })}
+                </ul>
+
+              </>
+
+            );
+          })}
         </p>
       </div>
     </>
