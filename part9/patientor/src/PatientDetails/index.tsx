@@ -11,7 +11,7 @@ import TransgenderIcon from '@mui/icons-material/Transgender';
 import { useParams } from "react-router-dom";
 
 const PatientDetails = () => {
-  const [{ patient }, dispatch] = useStateValue();
+  const [{ patient, diagnoses }, dispatch] = useStateValue();
   const { id } = useParams<{ id: string }>();
 
   React.useEffect(() => {
@@ -21,7 +21,6 @@ const PatientDetails = () => {
           // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
           `${apiBaseUrl}/patients/${id}`
         );
-        console.log(patientDetails);
 
         dispatch(setPatientDetails(patientDetails));
       } catch (e) {
@@ -43,8 +42,6 @@ const PatientDetails = () => {
       return <TransgenderIcon/>;
     } else return null;
   };
-
-  console.log(patient, "this is");
 
   return (
     <>
@@ -68,8 +65,9 @@ const PatientDetails = () => {
                   {entry.diagnosisCodes?.map((d, idx) => {
                     return (
                       <li key={idx}>
-                        {d}
+                        {d} {diagnoses[d].name}
                       </li>
+
                     );
                   })}
                 </ul>
