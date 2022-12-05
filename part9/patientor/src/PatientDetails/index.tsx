@@ -9,9 +9,10 @@ import FemaleIcon from '@mui/icons-material/Female';
 import TransgenderIcon from '@mui/icons-material/Transgender';
 
 import { useParams } from "react-router-dom";
+import { EntryDetails } from "../components/EntryDetails";
 
 const PatientDetails = () => {
-  const [{ patient, diagnoses }, dispatch] = useStateValue();
+  const [{ patient }, dispatch] = useStateValue();
   const { id } = useParams<{ id: string }>();
 
   React.useEffect(() => {
@@ -60,20 +61,8 @@ const PatientDetails = () => {
           {patient?.entries.map((entry, idx) => {
             return (
               <>
-                <div key={idx}>{entry.date} <i>{entry.description}</i></div>
-                <ul>
-                  {entry.diagnosisCodes?.map((d, idx) => {
-                    return (
-                      <li key={idx}>
-                        {d} {diagnoses[d].name}
-                      </li>
-
-                    );
-                  })}
-                </ul>
-
+                <EntryDetails entry={entry} key={idx}/>
               </>
-
             );
           })}
         </p>

@@ -10,7 +10,7 @@
     "@material-ui/lab": "^4.0.0-alpha.60",
     "@mui/base": "^5.0.0-alpha.107",
     "@mui/icons-material": "^5.10.15",
-    "@mui/material": "^5.10.15",
+    "@mui/material": "^5.10.16",
     "axios": "^0.25.0",
     "clsx": "^1.2.1",
     "formik": "^2.2.9",
