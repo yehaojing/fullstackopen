@@ -1,7 +1,7 @@
 import { v4 as uuid } from 'uuid';
 import patientsData from '../data/patients';
 
-import { SensitivePatient, NewPatient, Patient } from '../types';
+import { SensitivePatient, NewPatient, Patient, Entry } from '../types';
 
 const patients: Array<Patient> = patientsData;
 
@@ -35,8 +35,24 @@ const getPatient = (
   return patients.find(({id}) => id === findId) as Patient;
 };
 
+const addEntry = (
+  entry: Entry,
+  patientId: string
+): Entry => {
+  const patient: Patient = getPatient(patientId);
+
+  if (!patient) {
+    throw new Error(`No patient found`);
+  }
+
+  patient.entries.push(entry);
+
+  return entry;
+};
+
 export default {
   getEntries,
   addPatient,
-  getPatient
+  getPatient,
+  addEntry
 };

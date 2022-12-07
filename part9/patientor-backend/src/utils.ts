@@ -1,4 +1,5 @@
-import { NewPatient, Gender, Entry } from "./types";
+import { NewPatient, Gender, Entry, Diagnose, BaseEntry, HealthCheckRating } from "./types";
+import { v4 as uuid } from 'uuid';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const toNewPatient = (object: any): NewPatient => {
@@ -12,6 +13,57 @@ export const toNewPatient = (object: any): NewPatient => {
   };
 
   return newEntry;
+};
+
+export const toNewEntry = (object: any): Entry => {
+  const baseEntry: BaseEntry = {
+    id: uuid(),
+    description: parseGenericStringField(object.description),
+    date: parseDate(object.date),
+    specialist: parseGenericStringField(object.specialist),
+    diagnosisCodes: parseDiagnosisArray(object.diagnosisCodes)
+  };
+
+  if (!object.type || !isString(object.type)) {
+    throw new Error(`Missing or invalid entry type`);
+  }
+
+  switch (object.type) {
+    case 'HealthCheck':
+      return {
+        ...baseEntry,
+        type: 'HealthCheck',
+        healthCheckRating: parseHealthcheckRating(object.healthCheckRating)
+      };
+
+    case 'Hospital':
+      return {
+        ...baseEntry,
+        type: 'Hospital',
+        discharge: {
+          date: parseDate(object.dischargeDate),
+          criteria: parseGenericStringField(object.dischargeCriteria)
+        }
+      };
+
+    case 'OccupationalHealthcare':
+      let sickLeave;
+      if (object.sickLeaveStartDate && object.sickLeaveEndDate) {
+        sickLeave = {
+          startDate: parseDate(object.sickLeaveStartDate),
+          endDate: parseDate(object.sickLeaveEndDate)
+        };
+      }
+      return {
+        ...baseEntry,
+        type: 'OccupationalHealthcare',
+        employerName: parseGenericStringField(object.employerName),
+        sickLeave
+      };
+
+    default:
+      throw new Error(`Incorrect entry type`);
+  }
 };
 
 const isString = (text: unknown): text is string => {
@@ -30,6 +82,14 @@ const isGender = (param: any): param is Gender => {
 
 const isArray = (array: unknown): array is Entry[] => {
   return array instanceof Array;
+};
+
+const isDiagnosisArray = (array: unknown): array is Array<Diagnose['code']> => {
+  return array instanceof Array;
+};
+
+const isHealthCheckRating = (param: number): param is HealthCheckRating => {
+  return Object.values(HealthCheckRating).includes(param);
 };
 
 const parseGenericStringField = (field: unknown): string => {
@@ -59,3 +119,19 @@ const parseArray = (array: unknown): Entry[] => {
   }
   return array;
 };
+
+const parseDiagnosisArray = (array: unknown): Array<Diagnose['code']> => {
+  if (!array || !isDiagnosisArray(array)) {
+    throw new Error("Incorrect or missing diagnosis: " + array);
+  }
+  return array;
+};
+
+const parseHealthcheckRating = (rating: any): HealthCheckRating => {
+  const ratingNumber: number = parseInt(rating);
+  if (isNaN(ratingNumber) || !isHealthCheckRating(ratingNumber) || !rating) {
+    throw new Error("Incorrect or missing rating");
+  }
+  return ratingNumber;
+};
+
