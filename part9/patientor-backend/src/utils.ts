@@ -41,8 +41,8 @@ export const toNewEntry = (object: any): Entry => {
         ...baseEntry,
         type: 'Hospital',
         discharge: {
-          date: parseDate(object.dischargeDate),
-          criteria: parseGenericStringField(object.dischargeCriteria)
+          date: parseDate(object.discharge.date),
+          criteria: parseGenericStringField(object.discharge.criteria)
         }
       };
 
