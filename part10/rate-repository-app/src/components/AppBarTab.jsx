@@ -9,7 +9,8 @@ const styles = StyleSheet.create({
     linkBox: {
         borderRadius: 2,
         backgroundColor: theme.colors.textSecondary,
-        padding: 5
+        padding: 5,
+        marginLeft: 5
     }
 })
 
