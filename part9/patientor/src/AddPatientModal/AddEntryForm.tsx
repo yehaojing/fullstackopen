@@ -1,20 +1,76 @@
 import React from "react";
 import { useStateValue } from "../state";
-import { Grid, Button } from "@material-ui/core";
+import { Grid, Button, Divider } from "@material-ui/core";
+import { ToggleButtonGroup, ToggleButton } from "@mui/material";
 import { Field, Formik, Form } from "formik";
 
-import { DiagnosisSelection, TextField } from "./FormField";
-import { HospitalEntry } from "../types";
+import { DiagnosisSelection, HealthCheckOption, SelectField, TextField } from "./FormField";
+import { Entry, HealthCheckEntry, HealthCheckRating, HospitalEntry } from "../types";
 
-export type EntryFormValues = HospitalEntry;
+export type EntryFormValues = Entry;
+export type HospitalEntryFormValues = HospitalEntry;
+export type HealthCheckEntryFormValues = HealthCheckEntry;
 
-interface Props {
+interface EntryProps {
   onSubmit: (values: EntryFormValues) => void;
   onCancel: () => void;
   patientId: string;
 }
 
-export const AddEntryForm = ({ onSubmit, onCancel, patientId} : Props) => {
+interface HospitalEntryProps {
+  onSubmit: (values: HospitalEntryFormValues) => void;
+  onCancel: () => void;
+  patientId: string;
+}
+
+interface HealthCheckEntryProps {
+  onSubmit: (values: HealthCheckEntryFormValues) => void;
+  onCancel: () => void;
+  patientId: string;
+}
+
+const ratingOptions: HealthCheckOption[] = [
+  { value: HealthCheckRating.Healthy, label: 'Healthy' },
+  { value: HealthCheckRating.LowRisk, label: 'LowRisk' },
+  { value: HealthCheckRating.HighRisk, label: 'HighRisk' },
+  { value: HealthCheckRating.CriticalRisk, label: 'CriticalRisk' },
+];
+
+export const AddEntryForm = ({ onSubmit, onCancel, patientId }: EntryProps) => {
+  const [entryType, setEntryType] = React.useState("");
+
+  const handleChange = (
+    event: React.MouseEvent<HTMLElement>,
+    newEntryType: string
+  ) => {
+    if (newEntryType !== null) {
+      setEntryType(newEntryType);
+    }
+
+  };
+  return (
+    <>
+      <ToggleButtonGroup value={entryType} exclusive onChange={handleChange}>
+        <ToggleButton value="Hospital">Hospital</ToggleButton>
+        <ToggleButton value="HealthCheck">Healh Check</ToggleButton>
+      </ToggleButtonGroup>
+      <Divider style={{ margin: 5 }}></Divider>
+      {entryType === "Hospital" &&
+      <HospitalEntryForm
+        onSubmit={onSubmit}
+        onCancel={onCancel}
+        patientId={patientId}
+      />}
+      {entryType === "HealthCheck" && <HealthCheckForm
+        onSubmit={onSubmit}
+        onCancel={onCancel}
+        patientId={patientId}
+      />}
+    </>
+  );
+};
+
+const HospitalEntryForm = ({ onSubmit, onCancel, patientId }: HospitalEntryProps) => {
   const [{ diagnoses }] = useStateValue();
   return (
     <Formik
@@ -26,7 +82,7 @@ export const AddEntryForm = ({ onSubmit, onCancel, patientId} : Props) => {
         specialist: "",
         discharge: {
           date: "",
-          criteria: ""
+          criteria: "",
         },
         diagnosisCodes: [],
       }}
@@ -34,10 +90,7 @@ export const AddEntryForm = ({ onSubmit, onCancel, patientId} : Props) => {
       validate={(values) => {
         const requiredError = "Field is required";
         const dateError = "Date is incorrectly formatted";
-        const errors: { [field: string ]: any } = { discharge: {} };
-        if (!values.type) {
-          errors.type = requiredError;
-        }
+        const errors: { [field: string]: any } = { };
         if (!values.description) {
           errors.description = requiredError;
         }
@@ -51,7 +104,7 @@ export const AddEntryForm = ({ onSubmit, onCancel, patientId} : Props) => {
           errors.date = dateError;
         }
         if (!Date.parse(values.discharge.date)) {
-          errors.discharge.date = dateError ;
+          errors.discharge = { date: dateError };
         }
         return errors;
       }}
@@ -59,12 +112,6 @@ export const AddEntryForm = ({ onSubmit, onCancel, patientId} : Props) => {
       {({ isValid, dirty, setFieldValue, setFieldTouched }) => {
         return (
           <Form className="form ui">
-            <Field
-              label="Type"
-              placeholder="Type"
-              name="type"
-              component={TextField}
-            />
             <Field
               label="Description"
               placeholder="Description"
@@ -99,6 +146,105 @@ export const AddEntryForm = ({ onSubmit, onCancel, patientId} : Props) => {
               placeholder="Discharge Criteria"
               name="discharge.criteria"
               component={TextField}
+            />
+            <Grid>
+              <Grid item>
+                <Button
+                  color="secondary"
+                  variant="contained"
+                  style={{ float: "left" }}
+                  type="button"
+                  onClick={onCancel}
+                >
+                  Cancel
+                </Button>
+              </Grid>
+              <Grid item>
+                <Button
+                  style={{
+                    float: "right",
+                  }}
+                  type="submit"
+                  variant="contained"
+                  disabled={!dirty || !isValid}
+                >
+                  Add
+                </Button>
+              </Grid>
+            </Grid>
+          </Form>
+        );
+      }}
+    </Formik>
+  );
+};
+
+const HealthCheckForm = ({ onSubmit, onCancel, patientId }: HealthCheckEntryProps) => {
+  const [{ diagnoses }] = useStateValue();
+  return (
+    <Formik
+      initialValues={{
+        id: patientId,
+        type: "HealthCheck",
+        description: "",
+        date: "",
+        specialist: "",
+        healthCheckRating: 0,
+        diagnosisCodes: [],
+      }}
+      onSubmit={onSubmit}
+      validate={(values) => {
+        const requiredError = "Field is required";
+        const dateError = "Date is incorrectly formatted";
+        const errors: { [field: string]: string } = {};
+        if (!values.description) {
+          errors.description = requiredError;
+        }
+        if (!values.date) {
+          errors.date = requiredError;
+        }
+        if (!values.specialist) {
+          errors.specialist = requiredError;
+        }
+        if (!values.healthCheckRating) {
+          errors.healthCheckRating = requiredError;
+        }
+        if (!Date.parse(values.date)) {
+          errors.date = dateError;
+        }
+        return errors;
+      }}
+    >
+      {({ isValid, dirty, setFieldValue, setFieldTouched }) => {
+        return (
+          <Form className="form ui">
+            <Field
+              label="Description"
+              placeholder="Description"
+              name="description"
+              component={TextField}
+            />
+            <Field
+              label="Date"
+              placeholder="YYYY-MM-DD"
+              name="date"
+              component={TextField}
+            />
+            <Field
+              label="Specialist"
+              placeholder="Specialist"
+              name="specialist"
+              component={TextField}
+            />
+            <DiagnosisSelection
+              setFieldValue={setFieldValue}
+              setFieldTouched={setFieldTouched}
+              diagnoses={Object.values(diagnoses)}
+            />
+            <SelectField
+              label="Health Check Rating"
+              name="healthCheckRating"
+              options={ratingOptions}
             />
             <Grid>
               <Grid item>
