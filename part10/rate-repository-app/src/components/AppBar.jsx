@@ -1,10 +1,14 @@
-import { Text, View, StyleSheet, Pressable } from 'react-native';
+import { View, StyleSheet, Pressable } from 'react-native';
 import theme from '../theme';
+import AppBarTab from './AppBarTab';
 
 const styles = StyleSheet.create({
   container: {
     padding: 10,
-    backgroundColor: theme.colors.textPrimary
+    backgroundColor: theme.colors.textPrimary,
+    justifyContent: "space-between",
+    flexDirection: "row"
+
   },
   text: {
     color: theme.colors.appBarPrimary
@@ -13,11 +17,10 @@ const styles = StyleSheet.create({
 
 const AppBar = () => {
   return (
-    <Pressable onPress={() => console.log('You pressed the text!')}>
-        <View style={styles.container}>
-                <Text style={styles.text}>Repositories</Text>
-        </View>
-    </Pressable>
+    <View style={styles.container}>
+        <AppBarTab to="/">Repositories</AppBarTab>
+        <AppBarTab to="/login">Login</AppBarTab>
+    </View>
   );
 };
 
