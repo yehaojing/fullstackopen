@@ -33,7 +33,8 @@ export const AddEntryForm = ({ onSubmit, onCancel, patientId} : Props) => {
       onSubmit={onSubmit}
       validate={(values) => {
         const requiredError = "Field is required";
-        const errors: { [field: string]: string } = {};
+        const dateError = "Date is incorrectly formatted";
+        const errors: { [field: string ]: any } = { discharge: {} };
         if (!values.type) {
           errors.type = requiredError;
         }
@@ -45,6 +46,12 @@ export const AddEntryForm = ({ onSubmit, onCancel, patientId} : Props) => {
         }
         if (!values.specialist) {
           errors.specialist = requiredError;
+        }
+        if (!Date.parse(values.date)) {
+          errors.date = dateError;
+        }
+        if (!Date.parse(values.discharge.date)) {
+          errors.discharge.date = dateError ;
         }
         return errors;
       }}
