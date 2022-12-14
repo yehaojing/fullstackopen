@@ -46,7 +46,6 @@ const styles = StyleSheet.create({
 });
 
 export const Repositoryitem = ({ repository }) => {
-  console.log(repository);
   return (
       <View style={styles.container}>
         <View style={styles.headerRow}>
