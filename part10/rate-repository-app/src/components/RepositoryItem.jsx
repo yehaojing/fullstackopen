@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
 
 export const Repositoryitem = ({ repository }) => {
   return (
-      <View style={styles.container}>
+      <View style={styles.container} testID="repositoryItem">
         <View style={styles.headerRow}>
           <Avatar ownerAvatarUrl={repository.ownerAvatarUrl} />
           <View style={styles.headerText}>
