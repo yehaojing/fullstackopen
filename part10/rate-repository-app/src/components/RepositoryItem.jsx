@@ -6,6 +6,8 @@ import formatThousands from "../utils/formatThousands";
 import Stat from "./Stat";
 import { useParams } from "react-router-native";
 import useRepository from "../hooks/useRepository";
+import { ItemSeparator } from "./RepositoryList";
+import { format, parse } from "date-fns";
 
 const styles = StyleSheet.create({
   headerRow: {
@@ -54,21 +56,84 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
   },
+  reviewContainer: {
+    padding: 24,
+    flexDirection: "row",
+    justifyContent: "space-around",
+    backgroundColor: theme.colors.appBarPrimary,
+  },
+  reviewContainerText: {
+    paddingLeft: 20,
+    flexDirection: "column",
+    flexWrap: "wrap",
+    flexShrink: 1,
+    justifyContent: "space-around",
+  },
+  reviewRatingCircle: {
+    borderRadius: 20,
+    borderWidth: 2,
+    width: 40,
+    height: 40,
+    textAlign: "center",
+    justifyContent: "center",
+    alignItems: "center",
+    borderColor: theme.colors.primary,
+  },
+  reviewRating: {
+    color: theme.colors.primary,
+    fontWeight: "bold",
+  },
+  reviewUsername: {
+    fontWeight: "bold",
+  },
+  reviewDate: {
+    fontWeight: 1,
+    color: theme.colors.textSecondary,
+  },
 });
 
 export const RepositoryItemContainer = () => {
   let { repositoryId } = useParams();
-  // console.log(repositoryId)
 
   const repository = useRepository(repositoryId);
-  // console.log(repository)
 
   if (repository.loading || !repository.repository) {
     return <></>;
   } else {
-    console.log(repository);
-    return <RepositoryItem repository={repository.repository} showGH />;
+    return (
+      <View>
+        <RepositoryItem repository={repository.repository} showGH />
+        {repository.repository.reviews.edges.map((review) => {
+          return (
+            <View key={review.node.id}>
+              <ItemSeparator />
+              <ReviewItem review={review.node} />
+            </View>
+          );
+        })}
+      </View>
+    );
   }
+};
+
+const ReviewItem = ({ review }) => {
+  return (
+    <View style={styles.reviewContainer}>
+      <View style={styles.reviewRatingCircle}>
+        <Text style={styles.reviewRating}>{review.rating}</Text>
+      </View>
+      <View style={styles.reviewContainerText}>
+        <Text style={styles.reviewUsername}>{review.user.username}</Text>
+        <Text style={styles.reviewDate}>
+          {format(
+            parse(review.createdAt, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx", new Date()),
+            "yyyy-MM-dd"
+          )}
+        </Text>
+        <Text>{review.text}</Text>
+      </View>
+    </View>
+  );
 };
 
 export const RepositoryItem = ({ repository, showGH }) => {

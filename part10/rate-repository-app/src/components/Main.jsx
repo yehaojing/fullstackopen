@@ -15,7 +15,7 @@ const Main = () => {
         <Route path="/login" element={<SignIn />} exact />
         <Route
           path="/repository/:repositoryId"
-          element={<RepositoryItemContainer />}
+          element={<RepositoryItemContainer/>}
         />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
