@@ -5,6 +5,8 @@ import RepositoryList from "./RepositoryList";
 import { RepositoryItemContainer } from "./RepositoryItem";
 import { Route, Routes, Navigate } from "react-router-native";
 import SignIn from "./SignIn";
+import { Review } from "./ReviewForm";
+import Constants from 'expo-constants';
 
 const Main = () => {
   return (
@@ -17,6 +19,10 @@ const Main = () => {
           path="/repository/:repositoryId"
           element={<RepositoryItemContainer/>}
         />
+        <Route
+          path="/review"
+          element={<Review/>}
+        />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </View>
@@ -26,6 +32,7 @@ const Main = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    marginTop: Constants.statusBarHeight,
     backgroundColor: theme.colors.background,
     flexGrow: 1,
     flexShrink: 1,

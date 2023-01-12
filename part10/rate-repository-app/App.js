@@ -1,5 +1,6 @@
 import { NativeRouter } from "react-router-native";
 import { ApolloProvider } from "@apollo/client";
+import { StatusBar } from 'expo-status-bar';
 
 import Main from "./src/components/Main";
 import createApolloClient from "./src/utils/apolloClient";
@@ -19,6 +20,7 @@ export default function App() {
           </AuthStorageContext.Provider>
         </ApolloProvider>
       </NativeRouter>
+      <StatusBar style="auto" />
     </>
   );
 }

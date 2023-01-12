@@ -21,9 +21,6 @@ const styles = StyleSheet.create({
     color: theme.colors.appBarPrimary,
   },
   headerText: {
-    flexWrap: "wrap",
-    flexDirection: "column",
-    justifyContent: "space-between",
     flexShrink: 1,
     marginLeft: 10,
   },
@@ -65,7 +62,6 @@ const styles = StyleSheet.create({
   reviewContainerText: {
     paddingLeft: 20,
     flexDirection: "column",
-    flexWrap: "wrap",
     flexShrink: 1,
     justifyContent: "space-around",
   },
@@ -152,6 +148,7 @@ export const RepositoryItem = ({ repository, showGH }) => {
           </View>
         </View>
       </View>
+
       <View style={styles.statsContainer}>
         <Stat
           statName="stars"

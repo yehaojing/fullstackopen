@@ -22,11 +22,10 @@ const AppBar = () => {
   const apolloClient = useApolloClient();
 
   const signOut = async () => {
-    console.log('foobar')
+    console.log("foobar");
     await authStorage.removeAccessToken();
     await apolloClient.resetStore();
-
-  }
+  };
 
   const { me } = useMe();
   return (
@@ -34,14 +33,17 @@ const AppBar = () => {
       <ScrollView horizontal>
         <AppBarTab to="/">Repositories</AppBarTab>
         {me ? (
-          <AppBarTab to="/" onPress={signOut}>Logout</AppBarTab>
+          <>
+            <AppBarTab to="/" onPress={signOut}>
+              Logout
+            </AppBarTab>
+            <AppBarTab to="/review">Review</AppBarTab>
+          </>
         ) : (
           <AppBarTab to="/login">Login</AppBarTab>
         )}
       </ScrollView>
-      {
-        me ? (<AppBarTab>Logged in as {me.username}</AppBarTab>) : <></>
-      }
+      {me ? <AppBarTab>Logged in as {me.username}</AppBarTab> : <></>}
     </View>
   );
 };
