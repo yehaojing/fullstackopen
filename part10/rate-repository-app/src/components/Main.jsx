@@ -6,6 +6,7 @@ import { RepositoryItemContainer } from "./RepositoryItem";
 import { Route, Routes, Navigate } from "react-router-native";
 import SignIn from "./SignIn";
 import { Review } from "./ReviewForm";
+import { SignUp } from "./SignUpForm";
 import Constants from 'expo-constants';
 
 const Main = () => {
@@ -22,6 +23,10 @@ const Main = () => {
         <Route
           path="/review"
           element={<Review/>}
+        />
+        <Route
+          path="/signup"
+          element={<SignUp/>}
         />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

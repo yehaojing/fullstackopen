@@ -40,7 +40,10 @@ const AppBar = () => {
             <AppBarTab to="/review">Review</AppBarTab>
           </>
         ) : (
-          <AppBarTab to="/login">Login</AppBarTab>
+          <>
+            <AppBarTab to="/login">Login</AppBarTab>
+            <AppBarTab to="/signup">Sign Up</AppBarTab>
+          </>
         )}
       </ScrollView>
       {me ? <AppBarTab>Logged in as {me.username}</AppBarTab> : <></>}

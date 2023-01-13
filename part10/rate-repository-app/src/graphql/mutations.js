@@ -20,3 +20,13 @@ export const CREATE_REVIEW = gql`
     }
   }
 `;
+
+export const SIGN_UP = gql`
+mutation Mutation($user: CreateUserInput) {
+  createUser(user: $user) {
+    id
+    username
+    createdAt
+    reviewCount
+  }
+}`
