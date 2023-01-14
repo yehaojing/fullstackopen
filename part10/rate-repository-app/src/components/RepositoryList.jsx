@@ -4,6 +4,8 @@ import useRepositories from "../hooks/useRepositories";
 import { useNavigate } from "react-router-native";
 import { Picker } from '@react-native-picker/picker';
 import { useState } from "react";
+import { Searchbar } from 'react-native-paper'
+import { useDebounce, useDebouncedCallback } from 'use-debounce'
 
 const styles = StyleSheet.create({
   separator: {
@@ -40,28 +42,38 @@ export const RepositoryListContainer = ({ repositories, header }) => {
 };
 
 const RepositoryList = () => {
-  const [ordering, setOrdering] = useState({ orderBy: "CREATED_AT", orderDirection: "DESC" });
-  const { repositories } = useRepositories(ordering);
+  const [useRepositoriesVariables, setUseRepositoriesVariables] = useState({ orderBy: "CREATED_AT", orderDirection: "DESC", searchKeyword: "" });
+
+  const { repositories } = useRepositories(useRepositoriesVariables);
   const orderOptions = [
     { label: 'Latest repositories', value: 'latest' },
     { label: 'Highest rated repositories ', value: 'highest' },
     { label: 'Lowest rated repositories', value: 'lowest' }
   ];
 
+  const debounced = useDebouncedCallback(
+    (searchKeyword) => {
+      setUseRepositoriesVariables({ ...useRepositoriesVariables, searchKeyword });
+    }, 1000
+  );
+
   const handleValueChange = (value) => {
     if (value === 'highest') {
-      setOrdering({ orderBy: "RATING_AVERAGE", orderDirection: "DESC" });
+      setUseRepositoriesVariables({...useRepositoriesVariables, orderBy: "RATING_AVERAGE", orderDirection: "DESC"})
     } else if (value === "lowest") {
-      setOrdering({ orderBy: "RATING_AVERAGE", orderDirection: "ASC" });
+      setUseRepositoriesVariables({ ...useRepositoriesVariables, orderBy: "RATING_AVERAGE", orderDirection: "ASC" });
     } else {
-      setOrdering({ orderBy: "CREATED_AT", orderDirection: "DESC" });
+      setUseRepositoriesVariables({ ...useRepositoriesVariables, orderBy: "CREATED_AT", orderDirection: "DESC" });
     }
   };
 
   return <RepositoryListContainer repositories={repositories} header={
-    <Picker onValueChange={(value) => handleValueChange(value)}>
-        {orderOptions.map(order => <Picker.Item key={order.value} label={order.label} value={order.value}/>)}
-    </Picker>
+    <>
+      <Searchbar onChange={(e) => {debounced(e.target.value)}}></Searchbar>
+      <Picker onValueChange={(value) => handleValueChange(value)}>
+          {orderOptions.map(order => <Picker.Item key={order.value} label={order.label} value={order.value}/>)}
+      </Picker>
+    </>
   }/>;
 };
 
