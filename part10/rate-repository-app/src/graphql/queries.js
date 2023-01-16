@@ -98,6 +98,9 @@ export const ME = gql`
               id
               username
             }
+            repository {
+              url
+            }
           }
           cursor
         }

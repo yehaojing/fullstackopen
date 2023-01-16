@@ -1,4 +1,4 @@
-import { View, StyleSheet, Pressable, Linking } from "react-native";
+import { Button, View, StyleSheet, Pressable, Linking } from "react-native";
 import Text from "./Text";
 import Avatar from "./Avatar";
 import theme from "../theme";
@@ -8,6 +8,7 @@ import { useParams } from "react-router-native";
 import useRepository from "../hooks/useRepository";
 import { ItemSeparator } from "./RepositoryList";
 import { format, parse } from "date-fns";
+import useDeleteReview from "../hooks/useDeleteReview";
 
 const styles = StyleSheet.create({
   headerRow: {
@@ -56,7 +57,10 @@ const styles = StyleSheet.create({
   reviewContainer: {
     padding: 24,
     flexDirection: "row",
-    justifyContent: "space-around",
+    justifyContent: "space-around"
+    
+  },
+  reviewContainerWithButtons: {
     backgroundColor: theme.colors.appBarPrimary,
   },
   reviewContainerText: {
@@ -86,6 +90,25 @@ const styles = StyleSheet.create({
     fontWeight: 1,
     color: theme.colors.textSecondary,
   },
+  deleteButton: {
+    padding: 12,
+    marginBottom: 5,
+    borderRadius: 5,
+    backgroundColor: theme.colors.error,
+  },
+  viewRepoButton: {
+    padding: 12,
+    marginBottom: 5,
+    borderRadius: 5,
+    backgroundColor: theme.colors.primary,
+  },
+  reviewButtonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+  },
+  buttonTextColor: {
+    color: theme.colors.appBarPrimary
+  }
 });
 
 export const RepositoryItemContainer = () => {
@@ -112,22 +135,58 @@ export const RepositoryItemContainer = () => {
   }
 };
 
-export const ReviewItem = ({ review }) => {
+export const ReviewItem = ({ review, isMyReview }) => {
+  const [deleteReview] = useDeleteReview();
+  const githubHandler = (url) => {
+    return () => Linking.openURL(url);
+  };
+
+  const handleDeleteReview = (deleteReviewId) => {
+    return () => {
+      deleteReview({ deleteReviewId });
+    };
+  };
+
   return (
-    <View style={styles.reviewContainer}>
-      <View style={styles.reviewRatingCircle}>
-        <Text style={styles.reviewRating}>{review.rating}</Text>
+    <View style={styles.reviewContainerWithButtons}>
+      <View style={styles.reviewContainer}>
+        <View style={styles.reviewRatingCircle}>
+          <Text style={styles.reviewRating}>{review.rating}</Text>
+        </View>
+        <View style={styles.reviewContainerText}>
+          <Text style={styles.reviewUsername}>{review.user.username}</Text>
+          <Text style={styles.reviewDate}>
+            {format(
+              parse(
+                review.createdAt,
+                "yyyy-MM-dd'T'HH:mm:ss.SSSxxx",
+                new Date()
+              ),
+              "yyyy-MM-dd"
+            )}
+          </Text>
+          <Text>{review.text}</Text>
+        </View>
       </View>
-      <View style={styles.reviewContainerText}>
-        <Text style={styles.reviewUsername}>{review.user.username}</Text>
-        <Text style={styles.reviewDate}>
-          {format(
-            parse(review.createdAt, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx", new Date()),
-            "yyyy-MM-dd"
-          )}
-        </Text>
-        <Text>{review.text}</Text>
-      </View>
+      {isMyReview ? (
+        <View style={styles.reviewButtonContainer}>
+          <Pressable
+            style={styles.viewRepoButton}
+            onPress={githubHandler(review.repository.url)}
+          >
+            <Text style={styles.buttonTextColor}>View Repository</Text>
+          </Pressable>
+          <Pressable
+            style={styles.deleteButton}
+            onPress={handleDeleteReview(review.id)}
+            title="Delete Review"
+          >
+            <Text style={styles.buttonTextColor}>Delete Review</Text>
+          </Pressable>
+        </View>
+      ) : (
+        <></>
+      )}
     </View>
   );
 };

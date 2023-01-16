@@ -5,7 +5,7 @@ import { ME } from '../graphql/queries';
 const useMe = (variables) => {
   const [me, setMe] = useState();
 
-  const { error, loading } = useQuery(ME, {
+  const { error, loading, refetch } = useQuery(ME, {
     fetchPolicy: 'cache-and-network',
     variables,
     onCompleted: (data) => {
@@ -13,7 +13,7 @@ const useMe = (variables) => {
     },
   });
 
-  return { me, error, loading };
+  return { me, error, loading, refetch };
 };
 
 export default useMe;
