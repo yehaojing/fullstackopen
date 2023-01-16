@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-native";
 import { Picker } from '@react-native-picker/picker';
 import { useState } from "react";
 import { Searchbar } from 'react-native-paper'
-import { useDebounce, useDebouncedCallback } from 'use-debounce'
+import { useDebouncedCallback } from 'use-debounce'
 
 const styles = StyleSheet.create({
   separator: {
@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
 
 export const ItemSeparator = () => <View style={styles.separator} />;
 
-export const RepositoryListContainer = ({ repositories, header }) => {
+export const RepositoryListContainer = ({ repositories, header, onEndReach }) => {
   const navigate = useNavigate();
   const repositoryNodes = repositories
     ? repositories.edges.map((edge) => edge.node)
@@ -29,6 +29,8 @@ export const RepositoryListContainer = ({ repositories, header }) => {
     <FlatList
       data={repositoryNodes}
       ItemSeparatorComponent={ItemSeparator}
+      onEndReached={onEndReach}
+      onEndReachedThreshold={0.5}
       renderItem={(item) => {
         return (
           <Pressable onPress={onPress(item.item.id)}>
@@ -42,14 +44,18 @@ export const RepositoryListContainer = ({ repositories, header }) => {
 };
 
 const RepositoryList = () => {
-  const [useRepositoriesVariables, setUseRepositoriesVariables] = useState({ orderBy: "CREATED_AT", orderDirection: "DESC", searchKeyword: "" });
+  const [useRepositoriesVariables, setUseRepositoriesVariables] = useState({ orderBy: "CREATED_AT", orderDirection: "DESC", searchKeyword: "", first: 4});
 
-  const { repositories } = useRepositories(useRepositoriesVariables);
+  const { repositories, fetchMore } = useRepositories(useRepositoriesVariables);
   const orderOptions = [
     { label: 'Latest repositories', value: 'latest' },
     { label: 'Highest rated repositories ', value: 'highest' },
     { label: 'Lowest rated repositories', value: 'lowest' }
   ];
+
+  const onEndReach = () => {
+    fetchMore();
+  };
 
   const debounced = useDebouncedCallback(
     (searchKeyword) => {
@@ -74,7 +80,8 @@ const RepositoryList = () => {
           {orderOptions.map(order => <Picker.Item key={order.value} label={order.label} value={order.value}/>)}
       </Picker>
     </>
-  }/>;
+  }
+  onEndReach={onEndReach}/>;
 };
 
 export default RepositoryList;
