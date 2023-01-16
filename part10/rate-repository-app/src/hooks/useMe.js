@@ -2,13 +2,13 @@ import { useQuery } from '@apollo/client';
 import { useState } from "react";
 import { ME } from '../graphql/queries';
 
-const useMe = () => {
+const useMe = (variables) => {
   const [me, setMe] = useState();
 
   const { error, loading } = useQuery(ME, {
     fetchPolicy: 'cache-and-network',
+    variables,
     onCompleted: (data) => {
-        console.log(data);
         setMe(data.me);
     },
   });

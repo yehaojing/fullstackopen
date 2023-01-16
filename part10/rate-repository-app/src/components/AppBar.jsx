@@ -38,6 +38,7 @@ const AppBar = () => {
               Logout
             </AppBarTab>
             <AppBarTab to="/review">Review</AppBarTab>
+            <AppBarTab to="/myreviews">My Reviews</AppBarTab>
           </>
         ) : (
           <>

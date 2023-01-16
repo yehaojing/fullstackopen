@@ -8,6 +8,7 @@ import SignIn from "./SignIn";
 import { Review } from "./ReviewForm";
 import { SignUp } from "./SignUpForm";
 import Constants from 'expo-constants';
+import { MyReviews } from "./MyReviews";
 
 const Main = () => {
   return (
@@ -23,6 +24,10 @@ const Main = () => {
         <Route
           path="/review"
           element={<Review/>}
+        />
+        <Route
+          path="/myreviews"
+          element={<MyReviews/>}
         />
         <Route
           path="/signup"

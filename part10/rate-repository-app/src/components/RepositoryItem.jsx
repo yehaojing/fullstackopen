@@ -112,7 +112,7 @@ export const RepositoryItemContainer = () => {
   }
 };
 
-const ReviewItem = ({ review }) => {
+export const ReviewItem = ({ review }) => {
   return (
     <View style={styles.reviewContainer}>
       <View style={styles.reviewRatingCircle}>
