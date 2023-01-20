@@ -48,3 +48,4 @@ jobs:
           dontuseforce: false 
           healthcheck: https://${{vars.HEROKU_APP_NAME}}.herokuapp.com/health
           checkstring: ok
+          rollbackonhealthcheckfailed: true
