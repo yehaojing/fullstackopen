@@ -46,3 +46,5 @@ jobs:
           heroku_email: ${{vars.HEROKU_EMAIL}}
           appdir: part11/full-stack-open-pokedex
           dontuseforce: false 
+          healthcheck: https://${{vars.HEROKU_APP_NAME}}.herokuapp.com/health
+          checkstring: ok
