@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  simple_deployment_pipeline:
+  checks:
     runs-on: ubuntu-20.04
     env:
       working-directory: ./part11/full-stack-open-pokedex
@@ -33,3 +33,16 @@ jobs:
           start: npm run start-prod
           wait-on: http://localhost:5000
           working-directory: ./part11/full-stack-open-pokedex
+
+  deploy:
+    runs-on: ubuntu-20.04
+    needs: checks
+    steps:
+      - uses: actions/checkout@v3
+      - uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: ${{vars.HEROKU_APP_NAME}}
+          heroku_email: ${{vars.HEROKU_EMAIL}}
+          appdir: part11/full-stack-open-pokedex
+          dontuseforce: false 
