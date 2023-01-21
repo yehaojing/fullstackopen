@@ -53,6 +53,20 @@ jobs:
           healthcheck: https://${{vars.HEROKU_APP_NAME}}.herokuapp.com/health
           checkstring: ok
           rollbackonhealthcheckfailed: true
+      - name: Deployment Success
+        uses: rjstone/discord-webhook-notify@v1
+        if: success()
+        with:
+          severity: info
+          text: A new version of Pokedex has been deployed to https://${{vars.HEROKU_APP_NAME}}.herokuapp.com by yehaojing
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+      - name: Deployment Failure
+        uses: rjstone/discord-webhook-notify@v1
+        if: failure()
+        with:
+          severity: error
+          details: Deployment failed, rolled back to previous stable version!
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
 
   tag_release:
     runs-on: ubuntu-20.04
