@@ -1,0 +1,2 @@
+# in part12/part12-containers-applications/todo-app/todo-backend
+docker build -t express-server . && docker run -p 3123:3000 express-server
