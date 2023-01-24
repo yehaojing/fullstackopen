@@ -1,0 +1,7 @@
+echo "hello"
+docker run -it ubuntu bash
+
+# in container
+mkdir /usr/src/app
+touch /usr/src/app/index.js
+exit
