@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - feature/full-stack-open-pokedex
     paths:
       - 'part2/phonebook/**'
       - 'part3/phonebook_backend/**'
@@ -15,7 +14,8 @@ on:
 jobs:
   deploy:
     env:
-      working-directory: ./part3/phonebook_backend
+      phonebook_backend-working-directory: ./part3/phonebook_backend
+      phonebook_frontend-working-directory: ./part2/phonebook
     runs-on: ubuntu-20.04
     if: ${{ (github.event_name == 'push') && (!contains( join(github.event.commits.*.message), '#skip'))}}
     steps:
@@ -23,15 +23,15 @@ jobs:
 
       - name: npm install
         run: npm install
-        working-directory: ./part2/phonebook
+        working-directory: ${{ env.phonebook_frontend-working-directory }}
 
       - name: npm run build:init
         run: npm run build:init
-        working-directory: ${{ env.working-directory }}
+        working-directory: ${{ env.phonebook_backend-working-directory }}
 
       - name: npm run build:ui
         run: npm run build:ui
-        working-directory: ${{ env.working-directory }}
+        working-directory: ${{ env.phonebook_backend-working-directory }}
 
       - uses: akhileshns/heroku-deploy@v3.12.12
         with:
