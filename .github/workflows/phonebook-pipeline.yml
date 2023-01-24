@@ -1,0 +1,58 @@
+name: Phonebook deployment pipeline
+
+on:
+  push:
+    branches:
+      - main
+      - feature/full-stack-open-pokedex
+    paths:
+      - 'part2/phonebook/**'
+      - 'part3/phonebook_backend/**'
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize]
+
+jobs:
+  deploy:
+    env:
+      working-directory: ./part3/phonebook_backend
+    runs-on: ubuntu-20.04
+    if: ${{ (github.event_name == 'push') && (!contains( join(github.event.commits.*.message), '#skip'))}}
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: npm install
+        run: npm install
+        working-directory: ./part2/phonebook
+
+      - name: npm run build:init
+        run: npm run build:init
+        working-directory: ${{ env.working-directory }}
+
+      - name: npm run build:ui
+        run: npm run build:ui
+        working-directory: ${{ env.working-directory }}
+
+      - uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: ${{vars.HEROKU_PHONEBOOK_APP_NAME}}
+          heroku_email: ${{vars.HEROKU_EMAIL}}
+          appdir: heroku/phonebook
+          dontuseforce: false
+
+      - name: Deployment Success
+        uses: rjstone/discord-webhook-notify@v1
+        if: success()
+        with:
+          severity: info
+          details: A new version of Phonebook has been deployed to https://${{vars.HEROKU_PHONEBOOK_APP_NAME}}.herokuapp.com by yehaojing
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+
+      - name: Deployment Failure
+        uses: rjstone/discord-webhook-notify@v1
+        if: failure()
+        with:
+          severity: error
+          details: Deployment failed, rolled back to previous stable version!
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
