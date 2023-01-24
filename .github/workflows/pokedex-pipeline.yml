@@ -1,4 +1,4 @@
-name: Deployment pipeline
+name: Pokedex Deployment Pipeline
 
 on:
   push:
