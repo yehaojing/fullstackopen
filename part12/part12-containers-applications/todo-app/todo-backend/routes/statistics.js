@@ -4,8 +4,9 @@ const redis = require("../redis");
 
 router.get("/", async (_, res) => {
   const todoCounter = await redis.getAsync("todoCounter");
+  const todoCounterInt = !todoCounter ? 0 : parseInt(todoCounter)
   await res.send({
-    added_todos: parseInt(todoCounter)
+    added_todos: todoCounterInt
   })
 });
 
