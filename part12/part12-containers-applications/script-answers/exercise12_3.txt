@@ -1,0 +1,12 @@
+docker start -i infallible_fermat
+
+# in container
+apt-get update
+apt-get -y install nano
+nano /usr/src/app/index.js
+
+# in nano editor
+console.log("Hello World")
+^X # exit
+Y # save buffer
+ENTER # save file

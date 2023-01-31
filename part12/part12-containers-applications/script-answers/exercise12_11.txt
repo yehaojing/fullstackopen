@@ -1,0 +1,10 @@
+docker exec -it todo-backend_redis_1 bash
+
+# in Redis container
+redis-cli
+
+GET todoCounter
+
+SET todoCounter 9001
+
+DEL todoCounter
