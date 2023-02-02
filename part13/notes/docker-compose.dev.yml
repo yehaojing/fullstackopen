@@ -1,0 +1,26 @@
+services:
+
+  database:
+    image: postgres
+    volumes:
+      - ./pg_data/:/usr/src/app
+    ports:
+      - 5432:5432
+    container_name: notes-pg
+    environment:
+      - POSTGRES_PASSWORD=pw
+      - POSTGRES_USER=user
+      - POSTGRES_DB=notes
+
+  server:
+    image: notes-server
+    build:
+      context: .
+      dockerfile: dev.Dockerfile
+    volumes:
+      - .:/usr/src/app
+    ports:
+      - 3001:3001
+    container_name: notes-backend
+    environment:
+      - DATABASE_URL=postgres://user:pw@notes-pg:5432/notes
