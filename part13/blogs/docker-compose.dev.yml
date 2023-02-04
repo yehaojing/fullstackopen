@@ -3,7 +3,7 @@ services:
   database:
     image: postgres
     volumes:
-      - ./pg_data/:/usr/src/app
+      - ./pg_data/:/var/lib/postgresql/data
     ports:
       - 5432:5432
     container_name: blogs-pg
@@ -11,10 +11,18 @@ services:
       - POSTGRES_PASSWORD=pw
       - POSTGRES_USER=user
       - POSTGRES_DB=blogs
+    # healthcheck is required because blogs database needs to be created before running server
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "user", "-d", "blogs"]
+      interval: 5s
+      timeout: 5s
+      retries: 1
+      start_period: 5s
 
   server:
     depends_on:
-      - database
+      database:
+        condition: service_healthy
     image: blogs-server
     build:
       context: .
