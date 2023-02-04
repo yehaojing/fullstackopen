@@ -10,7 +10,7 @@ services:
     environment:
       - POSTGRES_PASSWORD=pw
       - POSTGRES_USER=user
-      - POSTGRES_DB=notes
+      - POSTGRES_DB=blogs
 
   server:
     depends_on:
@@ -25,4 +25,4 @@ services:
       - 3001:3001
     container_name: notes-backend
     environment:
-      - DATABASE_URL=postgres://user:pw@notes-pg:5432/notes
+      - DATABASE_URL=postgres://user:pw@notes-pg:5432/blogs
