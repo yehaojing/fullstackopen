@@ -6,7 +6,7 @@ services:
       - ./pg_data/:/usr/src/app
     ports:
       - 5432:5432
-    container_name: notes-pg
+    container_name: blogs-pg
     environment:
       - POSTGRES_PASSWORD=pw
       - POSTGRES_USER=user
@@ -15,7 +15,7 @@ services:
   server:
     depends_on:
       - database
-    image: notes-server
+    image: blogs-server
     build:
       context: .
       dockerfile: dev.Dockerfile
@@ -23,6 +23,6 @@ services:
       - .:/usr/src/app
     ports:
       - 3001:3001
-    container_name: notes-backend
+    container_name: blogs-backend
     environment:
-      - DATABASE_URL=postgres://user:pw@notes-pg:5432/blogs
+      - DATABASE_URL=postgres://user:pw@blogs-pg:5432/blogs
