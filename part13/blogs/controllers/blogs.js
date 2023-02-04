@@ -22,6 +22,9 @@ router.get("/", async (req, res) => {
       attributes: ["username"],
     },
     where,
+    order: [
+      ['likes', 'DESC']
+    ]
   });
   console.log(JSON.stringify(blogs, null, 2));
   res.json(blogs);
