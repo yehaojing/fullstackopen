@@ -1,0 +1,36 @@
+services:
+
+  database:
+    image: postgres
+    volumes:
+      - ./pg_data/:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    container_name: blogs-pg
+    environment:
+      - POSTGRES_PASSWORD=pw
+      - POSTGRES_USER=user
+      - POSTGRES_DB=blogs
+    # healthcheck is required because blogs database needs to be created before running server
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "user", "-d", "blogs"]
+      interval: 5s
+      timeout: 5s
+      retries: 1
+      start_period: 5s
+
+  server:
+    depends_on:
+      database:
+        condition: service_healthy
+    image: blogs-server
+    build:
+      context: .
+      dockerfile: dev.Dockerfile
+    volumes:
+      - .:/usr/src/app
+    ports:
+      - 3001:3001
+    container_name: blogs-backend
+    environment:
+      - DATABASE_URL=postgres://user:pw@blogs-pg:5432/blogs
