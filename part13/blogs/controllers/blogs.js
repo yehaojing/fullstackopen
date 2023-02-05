@@ -7,7 +7,7 @@ const { Op } = require("sequelize");
 router.get("/", async (req, res) => {
   const where = {};
 
-  const search = req.query.search
+  const search = req.query.search;
   if (search) {
     where[Op.or] = [
       { title: { [Op.iLike]: `%${search}%` } },
@@ -22,9 +22,7 @@ router.get("/", async (req, res) => {
       attributes: ["username"],
     },
     where,
-    order: [
-      ['likes', 'DESC']
-    ]
+    order: [["likes", "DESC"]],
   });
   console.log(JSON.stringify(blogs, null, 2));
   res.json(blogs);
