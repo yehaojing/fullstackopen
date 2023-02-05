@@ -41,7 +41,7 @@ const userFinder = async (req, res, next) => {
     include: {
       model: Blog,
       attributes: ["id", "url", "title", "author", "likes", "year_written"],
-      through: { attributes: [] },
+      through: { attributes: ["id", "read"] },
     },
   });
   if (req.user) {
