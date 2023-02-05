@@ -2,34 +2,27 @@ const { Model, DataTypes } = require("sequelize");
 
 const { sequelize } = require("../utils/db");
 
-class User extends Model {}
+class Session extends Model {}
 
-User.init(
+Session.init(
   {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
     },
-    username: {
-      type: DataTypes.STRING,
-      unique: true,
+    userId: {
+      type: DataTypes.INTEGER,
       allowNull: false,
-      validate: {
-        isEmail: true,
-      },
     },
-    name: {
+    token: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    passwordHash: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    disabled: {
+    loggedIn: {
       type: DataTypes.BOOLEAN,
-      defaultValue: false,
+      defaultValue: true,
+      allowNull: false,
     },
   },
   {
@@ -37,8 +30,8 @@ User.init(
     timestamps: true,
     createdAt: true,
     underscored: true,
-    modelName: "user",
+    modelName: "session",
   }
 );
 
-module.exports = User;
+module.exports = Session;

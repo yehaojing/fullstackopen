@@ -37,13 +37,11 @@ router.post("/", async (req, res) => {
 });
 
 const userFinder = async (req, res, next) => {
-  console.log('read is: ', req.query.read);
   const where = req.query.read
     ? {
         "$blogs.readingList.read$": JSON.parse(req.query.read),
       }
     : {};
-  console.log('where is: ', where)
   req.user = await User.findByPk(req.params.id, {
     include: {
       model: Blog,
@@ -62,7 +60,6 @@ const userFinder = async (req, res, next) => {
 };
 
 router.get("/:id", userFinder, async (req, res) => {
-  // console.log(req.user.toJSON());
   res.json({
     name: req.user.name,
     username: req.user.username,
