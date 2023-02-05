@@ -8,8 +8,8 @@ router.get("/", async (req, res) => {
   const users = await User.findAll({
     include: {
       model: Blog,
-      attributes: { exclude: ['userId'] }
-    }
+      attributes: { exclude: ["userId"] },
+    },
   });
   res.json(users);
 });
@@ -37,7 +37,13 @@ router.post("/", async (req, res) => {
 });
 
 const userFinder = async (req, res, next) => {
-  req.user = await User.findByPk(req.params.id);
+  req.user = await User.findByPk(req.params.id, {
+    include: {
+      model: Blog,
+      attributes: ["id", "url", "title", "author", "likes", "year_written"],
+      through: { attributes: [] },
+    },
+  });
   if (req.user) {
     next();
   } else {
@@ -49,21 +55,26 @@ const userFinder = async (req, res, next) => {
 
 router.get("/:id", userFinder, async (req, res) => {
   console.log(req.user.toJSON());
-  res.json(req.user);
+  res.json({
+    name: req.user.name,
+    username: req.user.username,
+    readings: req.user.blogs
+  });
 });
 
 router.put("/:username", async (req, res) => {
-  req.user = await User.findOne({where: {username: req.params.username}});
+  req.user = await User.findOne({ where: { username: req.params.username } });
   if (req.user) {
     req.user.username = req.body.username;
     await req.user.save();
     res.json(req.user);
   } else {
-    const err = new Error(`User with username '${req.params.username}' not found.`);
+    const err = new Error(
+      `User with username '${req.params.username}' not found.`
+    );
     err.name = "UserNotFound";
     throw err;
   }
 });
-
 
 module.exports = router;
